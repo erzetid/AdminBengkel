@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "@react-native-firebase/app": "^14.11.0",
+    "@react-navigation/native": "^6.0.10",
+    "@react-navigation/native-stack": "^6.6.2",
     "@realm/react": "^0.1.0",
+    "admin-bengkel": "^1.0.3",
     "react": "17.0.2",
     "react-native": "0.66.4",
     "react-native-get-random-values": "^1.7.0",
