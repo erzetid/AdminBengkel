@@ -12,8 +12,8 @@ import {
   Text,
   View,
 } from 'react-native';
-import {text} from '../../constant/styles';
-import {color} from '../../constant/theme';
+import {text} from '../constant/styles';
+import {color} from '../constant/theme';
 
 interface CardButtonProps {
   title: string;

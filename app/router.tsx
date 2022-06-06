@@ -6,21 +6,36 @@
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import TaskContext from './models';
-import HomeScreen from './screens/HomeScreen';
+import {HomeScreen, PartScreen, ReportScreen, ServiceScreen} from './screens';
 const {RealmProvider} = TaskContext;
 
-const Stack = createNativeStackNavigator();
+export type MainStackParamList = {
+  HomeScreen: undefined;
+  PartScreen: undefined;
+  ReportScreen: undefined;
+  ServiceScreen: undefined;
+};
+
+const MainStack = createNativeStackNavigator<MainStackParamList>();
 export default () => {
   return (
     <RealmProvider>
-      <NavigationContainer theme={DefaultTheme}>
-        <Stack.Navigator
-          initialRouteName="Home"
-          screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Home" component={HomeScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <SafeAreaView style={styles.container}>
+        <NavigationContainer theme={DefaultTheme}>
+          <MainStack.Navigator
+            initialRouteName="HomeScreen"
+            screenOptions={{headerShown: false}}>
+            <MainStack.Screen name="HomeScreen" component={HomeScreen} />
+            <MainStack.Screen name="PartScreen" component={PartScreen} />
+            <MainStack.Screen name="ReportScreen" component={ReportScreen} />
+            <MainStack.Screen name="ServiceScreen" component={ServiceScreen} />
+          </MainStack.Navigator>
+        </NavigationContainer>
+      </SafeAreaView>
     </RealmProvider>
   );
 };
+
+const styles = StyleSheet.create({container: {flex: 1}});
