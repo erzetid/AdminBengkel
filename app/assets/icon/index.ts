@@ -14,4 +14,16 @@ export const ICON = {
   note: require('./note.png'),
   transaction: require('./transaction.png'),
   workshop: require('./workshop.png'),
+  PART: {
+    oil: require('./part/oli.png'),
+    gearOil: require('./part/oli-gardan.png'),
+    coolant: require('./part/coolant.png'),
+    battery: require('./part/aki.png'),
+    sparkPlug: require('./part/busi.png'),
+    gearSet: require('./part/gear-set.png'),
+    brake: require('./part/kampas-rem.png'),
+    lamp: require('./part/lampu.png'),
+    tire: require('./part/tire.png'),
+    vBelt: require('./part/v-belt.png'),
+  },
 };
