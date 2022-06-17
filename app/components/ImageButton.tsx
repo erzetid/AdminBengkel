@@ -1,4 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
 // Copyright (c) 2022 fahrizalm14
 //
 // This software is released under the MIT License.
@@ -8,9 +7,9 @@ import React from 'react';
 import {
   GestureResponderEvent,
   Image,
-  Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {color} from '../constant/theme';
@@ -23,10 +22,10 @@ interface ImageButtonProps {
 const ImageButton = ({title, image, onPress}: ImageButtonProps) => {
   return (
     <View style={styles.content}>
-      <Pressable style={styles.button} onPress={onPress}>
+      <TouchableOpacity style={styles.button} onPress={onPress}>
         <Image style={styles.image} source={image} />
-      </Pressable>
-      <Text style={{color: color.gray, fontSize: 12}}>{title}</Text>
+      </TouchableOpacity>
+      <Text style={styles.titleText}>{title}</Text>
     </View>
   );
 };
@@ -52,4 +51,5 @@ const styles = StyleSheet.create({
   image: {
     maxHeight: 32,
   },
+  titleText: {color: color.gray, fontSize: 12},
 });

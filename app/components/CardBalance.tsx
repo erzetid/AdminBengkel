@@ -2,6 +2,7 @@
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
+
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
@@ -12,12 +13,7 @@ interface CardBalanceProps {
   color: string;
 }
 
-const CardBalance = ({
-  title,
-  value,
-  backgroundColor,
-  color,
-}: CardBalanceProps) => {
+export default ({title, value, backgroundColor, color}: CardBalanceProps) => {
   return (
     <View style={{...styles.content, backgroundColor}}>
       <Text style={styles.textTitle}>{title}</Text>
@@ -25,8 +21,6 @@ const CardBalance = ({
     </View>
   );
 };
-
-export default CardBalance;
 
 const styles = StyleSheet.create({
   content: {

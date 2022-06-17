@@ -5,13 +5,13 @@
 
 import React, {FC} from 'react';
 import {
-  Image,
-  Pressable,
   SafeAreaView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {ICON} from '../../../assets/icon/index';
 import {text} from '../../../constant/styles';
 import {color} from '../../../constant/theme';
@@ -42,9 +42,9 @@ const Header: FC<HeaderProps> = ({navigation}) => {
           </Text>
         </View>
         <View style={styles.settingButton}>
-          <Pressable>
-            <Image source={ICON.workshop} />
-          </Pressable>
+          <TouchableOpacity>
+            <Icon name="ios-settings-outline" size={30} color={color.white} />
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.mainButton}>
@@ -76,7 +76,8 @@ const styles = StyleSheet.create({
     backgroundColor: color.darkBlue,
     borderRadius: 50,
     marginTop: -40,
-    right: -18,
+    right: -10,
+    elevation: 1,
   },
   mainButton: {
     flexDirection: 'row',

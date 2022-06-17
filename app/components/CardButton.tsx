@@ -7,9 +7,9 @@ import React from 'react';
 import {
   GestureResponderEvent,
   Image,
-  Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {text} from '../constant/styles';
@@ -23,9 +23,9 @@ interface CardButtonProps {
 const CardButton = ({title, image, onPress}: CardButtonProps) => {
   return (
     <View style={styles.cardButton}>
-      <Pressable style={styles.button} onPress={onPress}>
+      <TouchableOpacity style={styles.button} onPress={onPress}>
         <Image style={styles.image} source={image} />
-      </Pressable>
+      </TouchableOpacity>
       <Text style={text.primarySmall}>{title}</Text>
     </View>
   );
