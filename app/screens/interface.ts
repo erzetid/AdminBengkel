@@ -21,7 +21,7 @@ export interface PartDetail {
   description: string;
   quantity: number;
   price: number;
-  image: any;
+  image: string;
   location: string;
 }
 
