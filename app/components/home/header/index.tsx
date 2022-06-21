@@ -3,7 +3,7 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import React, {FC} from 'react';
+import React, {FC, useCallback, useMemo} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -27,9 +27,25 @@ const cardButton = [
 interface HeaderProps extends ScreenProps {}
 
 const Header: FC<HeaderProps> = ({navigation}) => {
-  const onPress = (screen: string) => {
-    navigation.navigate(screen);
-  };
+  const onPress = useCallback(
+    (screen: string) => {
+      navigation.navigate(screen);
+    },
+    [navigation],
+  );
+
+  const button = useMemo(
+    () =>
+      cardButton.map(btn => (
+        <CardButton
+          key={btn.id}
+          title={btn.name}
+          onPress={() => onPress(btn.screen)}
+          image={btn.image}
+        />
+      )),
+    [onPress],
+  );
 
   return (
     <SafeAreaView>
@@ -47,16 +63,7 @@ const Header: FC<HeaderProps> = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.mainButton}>
-        {cardButton.map(btn => (
-          <CardButton
-            key={btn.id}
-            title={btn.name}
-            onPress={() => onPress(btn.screen)}
-            image={btn.image}
-          />
-        ))}
-      </View>
+      <View style={styles.mainButton}>{button}</View>
     </SafeAreaView>
   );
 };

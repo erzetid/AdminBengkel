@@ -7,27 +7,35 @@ import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {formatNumber} from 'react-native-currency-input';
 import {color} from '../../constant/theme';
+import {getImageSource} from '../../helpers';
 import {PartDetail} from '../../screens/interface';
 
-const RenderItem = (
-  {item}: {item: PartDetail},
-  onItemPress: (item: PartDetail) => void,
-  onSetStock: (item: PartDetail) => void,
-) => {
+const RenderItem = ({
+  item,
+  onItemPress,
+  onSetStock,
+}: {
+  item: PartDetail;
+  onItemPress: (item: PartDetail) => void;
+  onSetStock: (item: PartDetail) => void;
+}) => {
   return (
     <TouchableOpacity
-      key={item.id}
+      key={item.code}
       style={styles.content}
       onPress={() => onItemPress(item)}>
       <View style={styles.imageContent}>
-        <Image source={item.image} style={styles.image} />
+        <Image
+          source={getImageSource(item.image, 'PART')}
+          style={styles.image}
+        />
       </View>
       <View style={styles.detailContent}>
         <Text style={styles.itemNameText}>{item.name}</Text>
         <Text style={styles.itemNoText}>No part: {item.code}</Text>
         <Text style={styles.itemPriceText}>
           {formatNumber(item.price, {
-            prefix: 'Rp ',
+            prefix: 'Rp',
             delimiter: ',',
             signPosition: 'beforePrefix',
           })}
@@ -36,10 +44,8 @@ const RenderItem = (
       <View style={styles.setStockContent}>
         <TouchableOpacity
           style={styles.btnSetStock}
-          onPress={() => console.log('first')}>
-          <Text style={styles.btnSetStockText} onPress={() => onSetStock(item)}>
-            Atur Stok
-          </Text>
+          onPress={() => onSetStock(item)}>
+          <Text style={styles.btnSetStockText}>Atur Stok</Text>
         </TouchableOpacity>
         <Text style={styles.itemStockText}>Stok: {item.quantity}</Text>
         <View style={styles.locationContent}>

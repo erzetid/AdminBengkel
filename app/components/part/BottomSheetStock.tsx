@@ -4,10 +4,9 @@
 // https://opensource.org/licenses/MIT
 
 import {BottomSheetModal, BottomSheetTextInput} from '@gorhom/bottom-sheet';
-import React, {forwardRef, useMemo} from 'react';
+import React, {forwardRef, useMemo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {ICON} from '../../assets/icon';
 import {color} from '../../constant/theme';
 import {BottomSheetStockProps} from '../../screens/interface';
 import BackdropBS from '../BackdropBS';
@@ -20,12 +19,14 @@ const emptyDetail = {
   description: '',
   quantity: 0,
   price: 0,
-  image: ICON.sparePart,
+  buyPrice: 0,
+  image: 'sparePart',
   location: '',
 };
 const BottomSheetStock = forwardRef<BottomSheetModal, BottomSheetStockProps>(
-  ({item = emptyDetail, stock, setStock, onChangeText, onSave}, ref) => {
+  ({item = emptyDetail, stock, setStock, onSave}, ref) => {
     const snapPoints = useMemo(() => ['25%'], []);
+    const [isFocus, setIsFocus] = useState(false);
 
     const handleStockMinus = () => {
       if (stock > 0) {
@@ -61,9 +62,10 @@ const BottomSheetStock = forwardRef<BottomSheetModal, BottomSheetStockProps>(
             maxLength={4}
             keyboardType={'number-pad'}
             style={styles.stockTextInput}
+            onFocus={() => setIsFocus(true)}
+            onBlur={() => setIsFocus(false)}
             onChangeText={text => {
-              setStock(parseInt(text, 10) || item.quantity);
-              return onChangeText;
+              setStock(parseInt(text, 10) || 0);
             }}
           />
           <TouchableOpacity style={styles.btnMinus} onPress={handleStockMinus}>
@@ -75,8 +77,12 @@ const BottomSheetStock = forwardRef<BottomSheetModal, BottomSheetStockProps>(
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          style={styles.btnSave}
-          onPress={() => onSave(item.id)}>
+          style={
+            (isFocus && {...styles.btnSave, backgroundColor: color.gray}) ||
+            styles.btnSave
+          }
+          disabled={isFocus}
+          onPress={() => onSave(item.id!)}>
           <Text style={styles.btnSaveText}>Simpan</Text>
         </TouchableOpacity>
       </BottomSheetModal>
@@ -126,6 +132,10 @@ const styles = StyleSheet.create({
     color: color.darkGray,
     textAlign: 'center',
     fontSize: 25,
+    borderBottomColor: color.darkGray,
+    borderBottomWidth: 1,
+    paddingBottom: -5,
+    marginBottom: 5,
   },
   btnMinus: {
     borderColor: color.lightPurple,

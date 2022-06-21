@@ -4,7 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import React, {FC} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {color} from '../../constant/theme';
 import {PartListProps} from '../../screens/interface';
 import RenderItem from './RenderItem';
@@ -16,11 +16,16 @@ const PartList: FC<PartListProps> = ({
 }) => {
   return (
     <View style={styles.flatListContent}>
+      {!data.length && <Text style={styles.text}>Data tidak ditemukan.</Text>}
       <FlatList
         data={data}
-        renderItem={item =>
-          RenderItem(item, handleItemPress, handleStockModalPress)
-        }
+        renderItem={({item}) => (
+          <RenderItem
+            item={item}
+            onItemPress={handleItemPress}
+            onSetStock={handleStockModalPress}
+          />
+        )}
       />
     </View>
   );
@@ -34,5 +39,8 @@ const styles = StyleSheet.create({
     backgroundColor: color.white,
     borderRadius: 5,
     flex: 1,
+  },
+  text: {
+    color: color.darkGray,
   },
 });

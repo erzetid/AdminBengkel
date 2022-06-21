@@ -1,3 +1,4 @@
+'use-strict';
 // Copyright (c) 2022 fahrizalm14
 //
 // This software is released under the MIT License.
@@ -24,4 +25,4 @@ export const groupArrayByMultiple = (
   return result;
 };
 
-console.log(groupArrayByMultiple(menus, 3));
+console.log({gsTCxgt6KJN8: {myRow: 1}, i5fqtmRd7tax: {myRow: 1}});

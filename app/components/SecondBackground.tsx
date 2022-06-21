@@ -11,6 +11,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import {BACKGROUND} from '../assets/images';
+import {color} from '../constant/theme';
 
 const SecondBackground: FC = ({children}) => {
   return (
@@ -28,6 +29,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     height: Dimensions.get('screen').height,
+    color: color.lightPurple,
   },
   background: {
     flex: 1,

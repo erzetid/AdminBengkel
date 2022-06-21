@@ -7,3 +7,7 @@ export const BACKGROUND = {
   primary: require('./background_primary.png'),
   secondary: require('./background_secondary.png'),
 };
+
+export const SPLASH = {
+  logo: require('./splash.png'),
+};

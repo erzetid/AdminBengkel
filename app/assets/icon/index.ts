@@ -15,6 +15,7 @@ export const ICON = {
   transaction: require('./transaction.png'),
   workshop: require('./workshop.png'),
   PART: {
+    sparePart: require('./part.png'),
     oil: require('./part/oli.png'),
     gearOil: require('./part/oli-gardan.png'),
     coolant: require('./part/coolant.png'),

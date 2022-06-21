@@ -8,6 +8,6 @@ import Result from './Result';
 
 export class NotFoundResult<T> extends Result<T> {
   constructor(message: string, data: T | null = null) {
-    super(ResultStatus.ERROR, message, data);
+    super(ResultStatus.FAILED, message, data);
   }
 }

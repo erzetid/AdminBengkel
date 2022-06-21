@@ -16,4 +16,7 @@ export const color = {
   lightBlue: '#56CCF2',
   yellow: '#FFBC47',
   lightGray: '#F3F3F1',
+  red: '#f30000',
+  green: '#4cd038',
+  smoke: '#F5F5F5',
 };

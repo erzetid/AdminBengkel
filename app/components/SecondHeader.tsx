@@ -5,18 +5,33 @@
 
 import React, {FC} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {color} from '../constant/theme';
 import {SecondHeaderProps} from '../screens/interface';
 
-const SecondHeader: FC<SecondHeaderProps> = ({navigation, title}) => {
+const SecondHeader: FC<SecondHeaderProps> = ({
+  navigation,
+  title,
+  titleColor,
+  btnTextColor,
+}) => {
   return (
     <View style={styles.content}>
       <TouchableOpacity
         style={styles.btnBack}
         onPress={() => navigation.goBack()}>
-        <Text style={styles.textBtnBack}>Kembali</Text>
+        <Icon name="ios-chevron-back-outline" />
+        <Text
+          style={
+            {...styles.btnBack, color: btnTextColor} || styles.textBtnBack
+          }>
+          Kembali
+        </Text>
       </TouchableOpacity>
-      <Text style={styles.textTitle}>{title}</Text>
+      <Text
+        style={{...styles.textTitle, color: titleColor} || styles.textTitle}>
+        {title}
+      </Text>
     </View>
   );
 };
@@ -32,10 +47,14 @@ const styles = StyleSheet.create({
   },
   btnBack: {
     backgroundColor: color.lightPurple,
-    padding: 5,
+    paddingVertical: 5,
     borderRadius: 20,
     minWidth: 70,
     justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    color: color.white,
   },
   textBtnBack: {textAlign: 'center'},
   textTitle: {fontSize: 22, marginStart: 50},
