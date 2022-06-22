@@ -68,18 +68,12 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
   useEffect(() => {
     loadAlert();
     const init = async () => {
-      try {
-        // await partService.drop();
-        const getParts = await partService.getAll();
-        setParts(getParts);
-        searchParts.current = getParts;
-      } finally {
-        hideAlert();
-      }
+      await getParts();
     };
 
     init();
-  }, [partService]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     // console.log(tasks);
@@ -95,6 +89,20 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
     );
 
     return () => backHandler.remove();
+  }, []);
+
+  const getParts = useCallback(async () => {
+    try {
+      const _parts = await partService.getAll();
+      searchParts.current = _parts;
+      setParts(_parts);
+    } finally {
+      hideAlert();
+    }
+  }, [partService]);
+
+  const handleStock = useCallback((total: number) => {
+    setStock(total);
   }, []);
 
   const hideAlert = () => {
@@ -194,7 +202,6 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
       if (saving.status === ResultStatus.SUCCESS) {
         setShowAddPartForm(false);
         parts.push(saving.data!);
-        // searchParts.current?.push(part);
       }
     } catch (error) {
       statusAlert('Ada Kesalahan', ResultStatus.ERROR);
@@ -261,6 +268,21 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
     return true;
   };
 
+  const searchingParts = (text: string) => {
+    const result = searchParts.current?.filter(
+      (item: PartDetail) =>
+        item.name.toLowerCase().includes(text.toLowerCase()) ||
+        item.code.toLowerCase().includes(text.toLowerCase()),
+    );
+    setParts(result || []);
+  };
+
+  const handleSearch = () => {
+    if (searchBarText.current) {
+      searchingParts(searchBarText.current);
+    }
+  };
+
   const floatingActionMemo = useMemo(() => {
     return (
       <FloatingAction
@@ -289,10 +311,15 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
       <SearchBar
         ref={searchBarRef}
         title={'Carai nama/nomor part'}
-        onPress={() => console.log(searchBarText.current)}
+        onPress={handleSearch}
+        onFocus={getParts}
         onChangeText={text => {
+          if (text.length > 0) {
+            setParts(searchParts.current!);
+          }
           if (searchBarRef.current) {
             searchBarText.current = text;
+            searchingParts(text);
           }
         }}
       />
@@ -314,7 +341,7 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
 
       <BottomSheetStock
         stock={stock}
-        setStock={setStock}
+        setStock={handleStock}
         ref={stockModalRef}
         item={stockModalValue!}
         onSave={handleSaveStock}
