@@ -26,16 +26,17 @@ const emptyDetail = {
 const BottomSheetStock = forwardRef<BottomSheetModal, BottomSheetStockProps>(
   ({item = emptyDetail, stock, setStock, onSave}, ref) => {
     const snapPoints = useMemo(() => ['25%'], []);
+    const stocks = useMemo(() => stock, [stock]);
     const [isFocus, setIsFocus] = useState(false);
 
     const handleStockMinus = () => {
-      if (stock > 0) {
-        setStock(stock - 1);
+      if (stocks > 0) {
+        setStock(stocks - 1);
       }
     };
 
     const handleStockPlus = () => {
-      setStock(stock + 1);
+      setStock(stocks + 1);
     };
     return (
       <BottomSheetModal
@@ -58,7 +59,7 @@ const BottomSheetStock = forwardRef<BottomSheetModal, BottomSheetStockProps>(
             <Icon name="ios-add-outline" size={30} color={color.white} />
           </TouchableOpacity>
           <BottomSheetTextInput
-            value={stock.toString()}
+            value={stocks.toString()}
             maxLength={4}
             keyboardType={'number-pad'}
             style={styles.stockTextInput}
@@ -66,6 +67,7 @@ const BottomSheetStock = forwardRef<BottomSheetModal, BottomSheetStockProps>(
             onBlur={() => setIsFocus(false)}
             onChangeText={text => {
               setStock(parseInt(text, 10) || 0);
+              console.log(text);
             }}
           />
           <TouchableOpacity style={styles.btnMinus} onPress={handleStockMinus}>
