@@ -4,15 +4,17 @@
 // https://opensource.org/licenses/MIT
 
 import React, {FC} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
+import SecondBackground from '../components/SecondBackground';
+import SecondHeader from '../components/SecondHeader';
 import {color} from '../constant/theme';
 import {ServiceScreenProps} from './interface';
 
-const ServiceScreen: FC<ServiceScreenProps> = () => {
+const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
   return (
-    <View>
-      <Text style={styles.text}>ServiceScreen</Text>
-    </View>
+    <SecondBackground>
+      <SecondHeader title={'Servis'} navigation={navigation} />
+    </SecondBackground>
   );
 };
 

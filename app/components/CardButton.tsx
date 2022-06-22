@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   image: {
-    maxHeight: 32,
+    height: 32,
+    width: 32,
   },
 });

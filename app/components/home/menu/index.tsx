@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import {ICON} from '../../../assets/icon/index';
 import {text} from '../../../constant/styles';
+import {color} from '../../../constant/theme';
 import {groupArrayByMultiple} from '../../../helpers';
 import MenuButton from '../../MenuButton';
 
@@ -29,18 +30,39 @@ interface FeatureMenuProps {
 }
 
 export const menusDefault: MenuButtonProps[] = [
-  {title: 'Menu 1', image: ICON.service},
-  {title: 'Menu 2', image: ICON.service},
-  {title: 'Menu 3', image: ICON.service},
-  {title: 'Menu 4', image: ICON.service},
-  {title: 'Menu 5', image: ICON.service},
-  {title: 'Menu 6', image: ICON.service},
+  {title: 'Buku Kas', image: ICON.PART.battery},
+  {title: 'Konsumen', image: ICON.PART.sparkPlug},
+  {title: 'Kendaraan', image: ICON.moto},
+  {title: 'Laporan', image: ICON.PART.tire},
+  {title: 'Catatan', image: ICON.note},
+  {title: 'Donasi', image: ICON.PART.vBelt},
 ];
 
 const FeatureMenu = ({menus = menusDefault}: FeatureMenuProps) => {
   const mapMenus = groupArrayByMultiple(menus, 3);
   const handleOnPress = (index: number) => {
-    ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+    switch (index) {
+      case 0:
+        ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+        break;
+      case 1:
+        ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+        break;
+      case 2:
+        ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+        break;
+      case 3:
+        ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+        break;
+      case 4:
+        ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+        break;
+      case 5:
+        ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -76,7 +98,7 @@ const styles = StyleSheet.create({
   },
   card: {
     marginVertical: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: color.lightGray,
     borderRadius: 5,
     padding: 10,
     flexDirection: 'column',

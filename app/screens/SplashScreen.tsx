@@ -12,7 +12,7 @@ import {SplashScreenProps} from './interface';
 const SplashScreen: FC<SplashScreenProps> = ({navigation}) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('HomeScreen');
+      navigation?.navigate('HomeScreen');
     }, 3000);
   }, [navigation]);
   return (

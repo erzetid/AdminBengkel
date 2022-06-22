@@ -6,7 +6,7 @@
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {HomeScreen, PartScreen, ReportScreen, ServiceScreen} from './screens';
@@ -22,6 +22,31 @@ export type MainStackParamList = {
 
 const MainStack = createNativeStackNavigator<MainStackParamList>();
 export default () => {
+  const screens: {name: any; component: any}[] = useMemo(
+    () => [
+      {
+        name: 'HomeScreen',
+        component: HomeScreen,
+      },
+      {
+        name: 'PartScreen',
+        component: PartScreen,
+      },
+      {
+        name: 'ReportScreen',
+        component: ReportScreen,
+      },
+      {
+        name: 'SplashScreen',
+        component: SplashScreen,
+      },
+      {
+        name: 'ServiceScreen',
+        component: ServiceScreen,
+      },
+    ],
+    [],
+  );
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <BottomSheetModalProvider>
@@ -31,16 +56,20 @@ export default () => {
               initialRouteName="SplashScreen"
               screenOptions={{
                 headerShown: false,
-                animation: 'slide_from_right',
               }}>
-              <MainStack.Screen name="HomeScreen" component={HomeScreen} />
-              <MainStack.Screen name="PartScreen" component={PartScreen} />
-              <MainStack.Screen name="ReportScreen" component={ReportScreen} />
-              <MainStack.Screen name="SplashScreen" component={SplashScreen} />
-              <MainStack.Screen
-                name="ServiceScreen"
-                component={ServiceScreen}
-              />
+              {screens.map(route => (
+                <MainStack.Screen
+                  key={route.name}
+                  name={route.name}
+                  component={route.component}
+                  options={{
+                    animation:
+                      route.name === 'HomeScreen'
+                        ? 'slide_from_bottom'
+                        : 'simple_push',
+                  }}
+                />
+              ))}
             </MainStack.Navigator>
           </NavigationContainer>
         </SafeAreaView>

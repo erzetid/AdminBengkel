@@ -3,7 +3,7 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import React, {FC, useEffect, useMemo, useState} from 'react';
+import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {OutlinedTextField} from 'rn-material-ui-textfield';
@@ -81,6 +81,55 @@ const PartForm: FC<PartFormProps> = ({
   });
 
   const isVisible = useMemo(() => visible, [visible]);
+  const handleOnSave = useCallback(() => {
+    onSave({
+      code,
+      category: item
+        ? item.category
+        : valueCategory
+        ? valueCategory
+        : Category.FRAME,
+      image: item ? item.image : valueImage ? valueImage : ImagePart.DEFAULT,
+      buyPrice,
+      description,
+      location,
+      name,
+      price,
+      quantity,
+      time,
+    });
+  }, [
+    buyPrice,
+    code,
+    description,
+    item,
+    location,
+    name,
+    onSave,
+    price,
+    quantity,
+    time,
+    valueCategory,
+    valueImage,
+  ]);
+
+  const handleOnCancel = useCallback(() => {
+    onCancel();
+  }, [onCancel]);
+
+  const buttonAction = useMemo(
+    () => (
+      <View style={styles.actionContent}>
+        <TouchableOpacity style={styles.btnCancel} onPress={handleOnCancel}>
+          <Text style={{color: color.white}}>Batal</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.btnSave} onPress={handleOnSave}>
+          <Text style={{color: color.white}}>Simpan</Text>
+        </TouchableOpacity>
+      </View>
+    ),
+    [handleOnSave, handleOnCancel],
+  );
   useEffect(() => {
     validation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -109,25 +158,6 @@ const PartForm: FC<PartFormProps> = ({
       });
     }
   }, [isVisible, item]);
-
-  const handleOnSave = () => {
-    onSave({
-      code,
-      category: item
-        ? item.category
-        : valueCategory
-        ? valueCategory
-        : Category.FRAME,
-      image: item ? item.image : valueImage ? valueImage : ImagePart.DEFAULT,
-      buyPrice,
-      description,
-      location,
-      name,
-      price,
-      quantity,
-      time,
-    });
-  };
 
   const validation = () => {
     const obj: any = {
@@ -165,7 +195,7 @@ const PartForm: FC<PartFormProps> = ({
       iosIcon="create-outline"
       title={title}
       visible={isVisible}
-      onClose={onCancel}>
+      onClose={handleOnCancel}>
       <View style={styles.content}>
         {!item && (
           <View>
@@ -328,14 +358,7 @@ const PartForm: FC<PartFormProps> = ({
           onBlur={validation}
         />
       </View>
-      <View style={styles.actionContent}>
-        <TouchableOpacity style={styles.btnCancel} onPress={onCancel}>
-          <Text style={{color: color.white}}>Batal</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.btnSave} onPress={handleOnSave}>
-          <Text style={{color: color.white}}>Simpan</Text>
-        </TouchableOpacity>
-      </View>
+      {buttonAction}
     </Form>
   );
 };

@@ -23,7 +23,9 @@ const ImageButton = ({title, image, onPress}: ImageButtonProps) => {
   return (
     <View style={styles.content}>
       <TouchableOpacity style={styles.button} onPress={onPress}>
-        <Image style={styles.image} source={image} />
+        <View style={styles.btnBackground}>
+          <Image style={styles.image} source={image} />
+        </View>
       </TouchableOpacity>
       <Text style={styles.titleText}>{title}</Text>
     </View>
@@ -48,8 +50,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     elevation: 5,
   },
+  btnBackground: {
+    backgroundColor: color.yellow,
+    padding: 5,
+    borderRadius: 50,
+  },
   image: {
     maxHeight: 32,
+    width: 32,
   },
-  titleText: {color: color.gray, fontSize: 12},
+  titleText: {color: color.darkGray, fontSize: 12},
 });

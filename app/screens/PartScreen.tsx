@@ -60,6 +60,29 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
   const [stock, setStock] = useState(0);
   const [showAddPartForm, setShowAddPartForm] = useState(false);
   const [editFormShow, setEditFormShow] = useState(false);
+  const partsMemo = useMemo(() => parts, [parts]);
+  const floatingActionMemo = useMemo(() => {
+    return (
+      <FloatingAction
+        actions={actions}
+        onPressItem={(name: string | undefined) => {
+          switch (name) {
+            case 'btnAddPart':
+              setShowAddPartForm(true);
+              break;
+            case 'btnBuyPart':
+              setShowAddPartForm(true);
+              break;
+            default:
+              break;
+          }
+        }}
+        color={color.yellow}
+        overlayColor={'rgba(0, 0, 0, 0.6)'}
+        position="left"
+      />
+    );
+  }, []);
 
   useEffect(() => {
     optionAlertRef.current = optionAlert;
@@ -71,7 +94,9 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
       await getParts();
     };
 
-    init();
+    setTimeout(() => {
+      init();
+    }, 150);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -91,25 +116,11 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
     return () => backHandler.remove();
   }, []);
 
-  const getParts = useCallback(async () => {
-    try {
-      const _parts = await partService.getAll();
-      searchParts.current = _parts;
-      setParts(_parts);
-    } finally {
-      hideAlert();
-    }
-  }, [partService]);
-
-  const handleStock = useCallback((total: number) => {
-    setStock(total);
+  const hideAlert = useCallback(() => {
+    setOptionAlert({...optionAlertRef.current, show: false, progress: false});
   }, []);
 
-  const hideAlert = () => {
-    setOptionAlert({...optionAlertRef.current, show: false, progress: false});
-  };
-
-  const loadAlert = (message: string = 'Mohon tunggu...') => {
+  const loadAlert = useCallback((message: string = 'Mohon tunggu...') => {
     setOptionAlert({
       ...optionAlertRef.current,
       progress: true,
@@ -119,49 +130,69 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
       buttonCancelShow: false,
       buttonConfirmShow: false,
     });
-  };
+  }, []);
 
-  const confirmAlert = (
-    {
-      title = 'Admin Bengkel',
-      message,
-    }: {
-      title?: string;
-      message: string;
+  const confirmAlert = useCallback(
+    (
+      {
+        title = 'Admin Bengkel',
+        message,
+      }: {
+        title?: string;
+        message: string;
+      },
+      buttonCancelFunction: () => void,
+      buttonConfirmFunction: () => void,
+    ) => {
+      setOptionAlert({
+        ...optionAlertRef.current,
+        show: true,
+        title,
+        message,
+        buttonConfirmText: 'Ya, lanjutkan',
+        buttonCancelText: 'Tidak, batal',
+        buttonCancelColor: '#D0D0D0',
+        buttonConfirmColor: color.red,
+        buttonConfirmShow: true,
+        buttonCancelShow: true,
+        buttonCancelFunction,
+        buttonConfirmFunction,
+      });
     },
-    buttonCancelFunction: () => void,
-    buttonConfirmFunction: () => void,
-  ) => {
-    setOptionAlert({
-      ...optionAlertRef.current,
-      show: true,
-      title,
-      message,
-      buttonConfirmText: 'Ya, lanjutkan',
-      buttonCancelText: 'Tidak, batal',
-      buttonCancelColor: '#D0D0D0',
-      buttonConfirmColor: color.red,
-      buttonConfirmShow: true,
-      buttonCancelShow: true,
-      buttonCancelFunction,
-      buttonConfirmFunction,
-    });
-  };
+    [],
+  );
 
-  const statusAlert = useCallback((message: string, status: ResultStatus) => {
-    setOptionAlert({
-      ...optionAlertRef.current,
-      progress: false,
-      show: true,
-      title: status,
-      message: message,
-      buttonCancelColor:
-        status === ResultStatus.SUCCESS ? color.green : color.red,
-      buttonCancelShow: true,
-      buttonConfirmShow: false,
-      buttonCancelText: 'Tutup',
-      buttonCancelFunction: hideAlert,
-    });
+  const statusAlert = useCallback(
+    (message: string, status: ResultStatus) => {
+      setOptionAlert({
+        ...optionAlertRef.current,
+        progress: false,
+        show: true,
+        title: status,
+        message: message,
+        buttonCancelColor:
+          status === ResultStatus.SUCCESS ? color.green : color.red,
+        buttonCancelShow: true,
+        buttonConfirmShow: false,
+        buttonCancelText: 'Tutup',
+        buttonCancelFunction: hideAlert,
+      });
+    },
+    [hideAlert],
+  );
+
+  const getParts = useCallback(async () => {
+    try {
+      const _parts = await partService.getAll();
+      searchParts.current = _parts;
+      setParts(_parts);
+    } finally {
+      hideAlert();
+    }
+  }, [hideAlert, partService]);
+
+  const handleStock = useCallback((total: number) => {
+    setStock(total);
   }, []);
 
   const handleSetStock = useCallback((value: PartDetail) => {
@@ -179,14 +210,25 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
       });
       statusAlert(updating.message, updating.status);
       if (updating.status === ResultStatus.SUCCESS) {
-        const indexOf = parts.indexOf(stockModalValue!);
-        parts[indexOf] = updating.data!;
+        const indexOf = partsMemo.indexOf(stockModalValue!);
+        partsMemo[indexOf] = updating.data!;
         stockModalRef.current?.dismiss();
       }
     } catch (error) {
       statusAlert('Ada Kesalahan', ResultStatus.ERROR);
     }
   };
+
+  const formPartValidation = useCallback((obj: any): boolean => {
+    for (const key in obj) {
+      if (key !== 'category' && key !== 'image') {
+        if (!obj[key]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }, []);
 
   const handleSavePart = async (part: PartDetail) => {
     if (!formPartValidation(part)) {
@@ -220,17 +262,17 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
       if (updating.status === ResultStatus.SUCCESS) {
         detailModalRef.current?.close();
         setEditFormShow(false);
-        const indexOf = parts.indexOf(detail!);
-        parts[indexOf] = updating.data!;
+        const indexOf = partsMemo.indexOf(detail!);
+        partsMemo[indexOf] = updating.data!;
       }
     } catch (error) {
       statusAlert('Ada Kesalahan', ResultStatus.ERROR);
     }
   };
-  const handleItemPress = (value: PartDetail) => {
+  const handleItemPress = useCallback((value: PartDetail) => {
     setDetail(value);
     detailModalRef.current?.present();
-  };
+  }, []);
 
   const handlePressDeletePart = async (part: PartDetail) => {
     loadAlert();
@@ -257,54 +299,20 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
     );
   };
 
-  const formPartValidation = (obj: any): boolean => {
-    for (const key in obj) {
-      if (key !== 'category' && key !== 'image') {
-        if (!obj[key]) {
-          return false;
-        }
-      }
-    }
-    return true;
-  };
-
-  const searchingParts = (text: string) => {
+  const searchingParts = useCallback((text: string) => {
     const result = searchParts.current?.filter(
       (item: PartDetail) =>
         item.name.toLowerCase().includes(text.toLowerCase()) ||
         item.code.toLowerCase().includes(text.toLowerCase()),
     );
     setParts(result || []);
-  };
+  }, []);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     if (searchBarText.current) {
       searchingParts(searchBarText.current);
     }
-  };
-
-  const floatingActionMemo = useMemo(() => {
-    return (
-      <FloatingAction
-        actions={actions}
-        onPressItem={(name: string | undefined) => {
-          switch (name) {
-            case 'btnAddPart':
-              setShowAddPartForm(true);
-              break;
-            case 'btnBuyPart':
-              setShowAddPartForm(true);
-              break;
-            default:
-              break;
-          }
-        }}
-        color={color.yellow}
-        overlayColor={'rgba(0, 0, 0, 0.6)'}
-        actionsPaddingTopBottom={0}
-      />
-    );
-  }, []);
+  }, [searchingParts]);
   return (
     <SecondBackground>
       <SecondHeader navigation={navigation} title={'Spare Part'} />
@@ -320,11 +328,12 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
           if (searchBarRef.current) {
             searchBarText.current = text;
             searchingParts(text);
+            console.log(parts.length);
           }
         }}
       />
       <PartList
-        data={parts}
+        data={partsMemo.sort((a, b) => b.time! - a.time!)}
         handleItemPress={handleItemPress}
         handleStockModalPress={handleSetStock}
       />

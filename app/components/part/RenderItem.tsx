@@ -3,7 +3,7 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {formatNumber} from 'react-native-currency-input';
 import {color} from '../../constant/theme';
@@ -11,7 +11,7 @@ import {getImageSource} from '../../helpers';
 import {PartDetail} from '../../screens/interface';
 
 const RenderItem = ({
-  item,
+  item: it,
   onItemPress,
   onSetStock,
 }: {
@@ -19,11 +19,25 @@ const RenderItem = ({
   onItemPress: (item: PartDetail) => void;
   onSetStock: (item: PartDetail) => void;
 }) => {
+  const item = useMemo(() => it, [it]);
+  const handleItemPress = useCallback(
+    (_item: PartDetail) => {
+      onItemPress(_item);
+    },
+    [onItemPress],
+  );
+
+  const handleSetStock = useCallback(
+    (_item: PartDetail) => {
+      onSetStock(_item);
+    },
+    [onSetStock],
+  );
   return (
     <TouchableOpacity
       key={item.code}
       style={styles.content}
-      onPress={() => onItemPress(item)}>
+      onPress={() => handleItemPress(item)}>
       <View style={styles.imageContent}>
         <Image
           source={getImageSource(item.image, 'PART')}
@@ -44,7 +58,7 @@ const RenderItem = ({
       <View style={styles.setStockContent}>
         <TouchableOpacity
           style={styles.btnSetStock}
-          onPress={() => onSetStock(item)}>
+          onPress={() => handleSetStock(item)}>
           <Text style={styles.btnSetStockText}>Atur Stok</Text>
         </TouchableOpacity>
         <Text style={styles.itemStockText}>Stok: {item.quantity}</Text>

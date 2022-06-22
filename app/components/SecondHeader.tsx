@@ -19,7 +19,7 @@ const SecondHeader: FC<SecondHeaderProps> = ({
     <View style={styles.content}>
       <TouchableOpacity
         style={styles.btnBack}
-        onPress={() => navigation.goBack()}>
+        onPress={() => navigation?.goBack()}>
         <Icon name="ios-chevron-back-outline" />
         <Text
           style={
@@ -57,5 +57,5 @@ const styles = StyleSheet.create({
     color: color.white,
   },
   textBtnBack: {textAlign: 'center'},
-  textTitle: {fontSize: 22, marginStart: 50},
+  textTitle: {fontSize: 22, marginStart: 50, color: color.lightGray},
 });

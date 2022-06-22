@@ -21,7 +21,7 @@ import CardButton from '../../CardButton';
 const cardButton = [
   {id: 1, name: 'Servis', image: ICON.service, screen: 'ServiceScreen'},
   {id: 2, name: 'Spare Part', image: ICON.sparePart, screen: 'PartScreen'},
-  {id: 3, name: 'Laporan', image: ICON.report, screen: 'ReportScreen'},
+  {id: 3, name: 'Transaksi', image: ICON.PART.coolant, screen: 'ReportScreen'},
 ];
 
 interface HeaderProps extends ScreenProps {}
@@ -29,7 +29,7 @@ interface HeaderProps extends ScreenProps {}
 const Header: FC<HeaderProps> = ({navigation}) => {
   const onPress = useCallback(
     (screen: string) => {
-      navigation.navigate(screen);
+      navigation?.navigate(screen);
     },
     [navigation],
   );
@@ -52,7 +52,9 @@ const Header: FC<HeaderProps> = ({navigation}) => {
       <View style={styles.info}>
         <View>
           {/* eslint-disable-next-line react-native/no-inline-styles */}
-          <Text style={{fontSize: 22}}>Bengkel Cometor</Text>
+          <Text style={{fontSize: 22, color: color.lightGray}}>
+            Bengkel Cometor
+          </Text>
           <Text style={text.primarySmall}>
             {'Menyawak, mau profit berapa hari ini? '}
           </Text>

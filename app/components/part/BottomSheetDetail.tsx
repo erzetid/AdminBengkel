@@ -4,7 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import React, {forwardRef, useMemo} from 'react';
+import React, {forwardRef, useCallback, useMemo} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {formatNumber} from 'react-native-currency-input';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -19,15 +19,36 @@ const BottomSheetDetail = forwardRef<BottomSheetModal, BottomSheetDetailProps>(
   ({detail, openForm, onDelete, onSave, setEditFormShow}, ref) => {
     const snapPoints = useMemo(() => ['35%', '50%', '70%', '100%'], []);
 
-    const handleCancel = () => setEditFormShow(false);
+    const handleCancel = useCallback(
+      () => setEditFormShow(false),
+      [setEditFormShow],
+    );
     const handleOpen = () => setEditFormShow(true);
     const onPressDelete = () => {
       onDelete(detail!);
     };
 
-    const handleSave = (part: PartDetail) => {
-      onSave(part);
-    };
+    const handleSave = useCallback(
+      (part: PartDetail) => {
+        onSave(part);
+      },
+      [onSave],
+    );
+
+    const formElement = useMemo(() => {
+      if (openForm) {
+        return (
+          <PartForm
+            title={'Edit Part'}
+            visible={openForm}
+            onCancel={handleCancel}
+            onSave={handleSave}
+            item={detail!}
+          />
+        );
+      }
+      return null;
+    }, [detail, handleCancel, handleSave, openForm]);
 
     const DetailText = ({title, value}: {title: string; value: string}) => (
       <Text style={styles.itemTitle}>
@@ -100,13 +121,7 @@ const BottomSheetDetail = forwardRef<BottomSheetModal, BottomSheetDetailProps>(
             <Text style={styles.btnActionText}>Hapus</Text>
           </TouchableOpacity>
         </View>
-        <PartForm
-          title={'Edit Part'}
-          visible={openForm}
-          onCancel={handleCancel}
-          onSave={handleSave}
-          item={detail!}
-        />
+        {formElement}
       </BottomSheetModal>
     );
   },
