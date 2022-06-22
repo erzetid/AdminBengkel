@@ -48,6 +48,7 @@ export interface SearchBarProps {
   title: string;
   onPress: () => void;
   onChangeText?: (text: string) => void;
+  onFocus: () => void;
 }
 
 export interface BottomSheetStockProps {
