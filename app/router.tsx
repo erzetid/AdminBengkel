@@ -9,8 +9,19 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useMemo} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {HomeScreen, PartScreen, ReportScreen, ServiceScreen} from './screens';
-import SplashScreen from './screens/SplashScreen';
+import {
+  CashFlowScreen,
+  CustomerScreen,
+  DonationScreen,
+  HomeScreen,
+  NoteScreen,
+  PartScreen,
+  ReportScreen,
+  ServiceScreen,
+  SplashScreen,
+  TransactionScreen,
+  VehicleScreen,
+} from './screens';
 
 export type MainStackParamList = {
   HomeScreen: undefined;
@@ -18,6 +29,12 @@ export type MainStackParamList = {
   ReportScreen: undefined;
   ServiceScreen: undefined;
   SplashScreen: undefined;
+  VehicleScreen: undefined;
+  TransactionScreen: undefined;
+  NoteScreen: undefined;
+  DonationScreen: undefined;
+  CashFlowScreen: undefined;
+  CustomerScreen: undefined;
 };
 
 const MainStack = createNativeStackNavigator<MainStackParamList>();
@@ -43,6 +60,30 @@ export default () => {
       {
         name: 'ServiceScreen',
         component: ServiceScreen,
+      },
+      {
+        name: 'VehicleScreen',
+        component: VehicleScreen,
+      },
+      {
+        name: 'CustomerScreen',
+        component: CustomerScreen,
+      },
+      {
+        name: 'CashFlowScreen',
+        component: CashFlowScreen,
+      },
+      {
+        name: 'DonationScreen',
+        component: DonationScreen,
+      },
+      {
+        name: 'NoteScreen',
+        component: NoteScreen,
+      },
+      {
+        name: 'TransactionScreen',
+        component: TransactionScreen,
       },
     ],
     [],

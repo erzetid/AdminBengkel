@@ -3,6 +3,7 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
+import {NavigationProp, ParamListBase} from '@react-navigation/native';
 import React from 'react';
 import {
   Dimensions,
@@ -10,7 +11,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  ToastAndroid,
   View,
 } from 'react-native';
 import {ICON} from '../../../assets/icon/index';
@@ -22,43 +22,45 @@ import MenuButton from '../../MenuButton';
 interface MenuButtonProps {
   title: string;
   image: string;
+  id: number;
   onPress?: () => void;
 }
 
 interface FeatureMenuProps {
   menus?: MenuButtonProps[];
+  navigation?: NavigationProp<ParamListBase>;
 }
 
 export const menusDefault: MenuButtonProps[] = [
-  {title: 'Buku Kas', image: ICON.PART.battery},
-  {title: 'Konsumen', image: ICON.PART.sparkPlug},
-  {title: 'Kendaraan', image: ICON.moto},
-  {title: 'Laporan', image: ICON.PART.tire},
-  {title: 'Catatan', image: ICON.note},
-  {title: 'Donasi', image: ICON.PART.vBelt},
+  {title: 'Buku Kas', image: ICON.PART.battery, id: 0},
+  {title: 'Konsumen', image: ICON.PART.sparkPlug, id: 1},
+  {title: 'Kendaraan', image: ICON.moto, id: 2},
+  {title: 'Laporan', image: ICON.PART.tire, id: 3},
+  {title: 'Catatan', image: ICON.note, id: 4},
+  {title: 'Donasi', image: ICON.PART.vBelt, id: 5},
 ];
 
-const FeatureMenu = ({menus = menusDefault}: FeatureMenuProps) => {
+const FeatureMenu = ({menus = menusDefault, navigation}: FeatureMenuProps) => {
   const mapMenus = groupArrayByMultiple(menus, 3);
   const handleOnPress = (index: number) => {
     switch (index) {
       case 0:
-        ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+        navigation?.navigate('CashFlowScreen');
         break;
       case 1:
-        ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+        navigation?.navigate('CustomerScreen');
         break;
       case 2:
-        ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+        navigation?.navigate('VehicleScreen');
         break;
       case 3:
-        ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+        navigation?.navigate('ReportScreen');
         break;
       case 4:
-        ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+        navigation?.navigate('NoteScreen');
         break;
       case 5:
-        ToastAndroid.show(`Menu ${index + 1}`, ToastAndroid.SHORT);
+        navigation?.navigate('DonationScreen');
         break;
       default:
         break;
@@ -73,12 +75,12 @@ const FeatureMenu = ({menus = menusDefault}: FeatureMenuProps) => {
           {mapMenus.map((menu, index) => {
             return (
               <View key={index} style={styles.menu}>
-                {menu.map((m, i) => (
+                {menu.map(m => (
                   <MenuButton
-                    key={i}
+                    key={m.id}
                     title={m.title}
                     image={m.image}
-                    onPress={() => handleOnPress(i)}
+                    onPress={() => handleOnPress(m.id)}
                   />
                 ))}
               </View>

@@ -30,7 +30,7 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
             <Text>Ads</Text>
           </Ads>
           <Balance />
-          <Menu />
+          <Menu navigation={navigation} />
         </View>
       </ImageBackground>
     </SafeAreaView>

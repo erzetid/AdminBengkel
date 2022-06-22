@@ -3,7 +3,7 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import React, {forwardRef} from 'react';
+import React, {forwardRef, useCallback} from 'react';
 import {
   StyleSheet,
   Text,
@@ -17,6 +17,9 @@ import {SearchBarProps} from '../screens/interface';
 
 const SearchBar = forwardRef<TextInput, SearchBarProps>(
   ({title, onPress, onChangeText, onFocus}, ref) => {
+    const handleOnPress = useCallback(() => {
+      onPress();
+    }, [onPress]);
     const handleOnFocus = () => {
       onFocus();
     };
@@ -39,7 +42,7 @@ const SearchBar = forwardRef<TextInput, SearchBarProps>(
             onFocus={handleOnFocus}
           />
         </View>
-        <TouchableOpacity style={styles.searchBarBtn} onPress={onPress}>
+        <TouchableOpacity style={styles.searchBarBtn} onPress={handleOnPress}>
           <Text style={styles.searchBarBtnText}>Cari</Text>
         </TouchableOpacity>
       </View>

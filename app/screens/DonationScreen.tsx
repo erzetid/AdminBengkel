@@ -7,21 +7,16 @@ import React, {FC} from 'react';
 import {StyleSheet} from 'react-native';
 import SecondBackground from '../components/SecondBackground';
 import SecondHeader from '../components/SecondHeader';
-import {color} from '../constant/theme';
-import {ReportScreenProps} from './interface';
+import {DonationScreenProps} from './interface';
 
-const ReportScreen: FC<ReportScreenProps> = ({navigation}) => {
+const DonationScreen: FC<DonationScreenProps> = ({navigation}) => {
   return (
     <SecondBackground>
-      <SecondHeader title="Laporan" navigation={navigation} />
+      <SecondHeader title="Donasi" navigation={navigation} />
     </SecondBackground>
   );
 };
 
-export default ReportScreen;
+export default DonationScreen;
 
-const styles = StyleSheet.create({
-  text: {
-    color: color.black,
-  },
-});
+const styles = StyleSheet.create({});

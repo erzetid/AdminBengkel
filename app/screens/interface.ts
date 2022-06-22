@@ -16,6 +16,12 @@ export interface PartScreenProps extends ScreenProps {}
 export interface ReportScreenProps extends ScreenProps {}
 export interface ServiceScreenProps extends ScreenProps {}
 export interface SplashScreenProps extends ScreenProps {}
+export interface VehicleScreenProps extends ScreenProps {}
+export interface CustomerScreenProps extends ScreenProps {}
+export interface TransactionScreenProps extends ScreenProps {}
+export interface CashFlowScreenProps extends ScreenProps {}
+export interface NoteScreenProps extends ScreenProps {}
+export interface DonationScreenProps extends ScreenProps {}
 export interface PartDetail {
   id?: string;
   name: string;

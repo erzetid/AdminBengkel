@@ -308,11 +308,9 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
     setParts(result || []);
   }, []);
 
-  const handleSearch = useCallback(() => {
-    if (searchBarText.current) {
-      searchingParts(searchBarText.current);
-    }
-  }, [searchingParts]);
+  const handleSearch = async () => {
+    searchingParts(searchBarText.current);
+  };
   return (
     <SecondBackground>
       <SecondHeader navigation={navigation} title={'Spare Part'} />
