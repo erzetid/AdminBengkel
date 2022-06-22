@@ -16,7 +16,10 @@ import {color} from '../constant/theme';
 import {SearchBarProps} from '../screens/interface';
 
 const SearchBar = forwardRef<TextInput, SearchBarProps>(
-  ({title, onPress, onChangeText}, ref) => {
+  ({title, onPress, onChangeText, onFocus}, ref) => {
+    const handleOnFocus = () => {
+      onFocus();
+    };
     return (
       <View style={styles.content}>
         <View style={styles.searchBar}>
@@ -33,6 +36,7 @@ const SearchBar = forwardRef<TextInput, SearchBarProps>(
             placeholderTextColor={color.gray}
             maxLength={35}
             onChangeText={onChangeText}
+            onFocus={handleOnFocus}
           />
         </View>
         <TouchableOpacity style={styles.searchBarBtn} onPress={onPress}>
