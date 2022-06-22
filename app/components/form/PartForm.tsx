@@ -86,6 +86,30 @@ const PartForm: FC<PartFormProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (!item && !isVisible) {
+      setName(null!);
+      setCode(null!);
+      setDescription(null!);
+      setPrice(0);
+      setBuyPrice(0);
+      setQuantity(0);
+      setLocation('');
+      setValueCategory(null!);
+      setValueImage(null!);
+      setError({
+        buyPrice: 'Harus diisi.',
+        code: 'Harus diisi.',
+        description: '',
+        location: 'Harus diisi.',
+        name: 'Harus diisi.',
+        price: 'Harus diisi.',
+        quantity: 'Harus diisi.',
+        time: 'Harus diisi.',
+      });
+    }
+  }, [isVisible, item]);
+
   const handleOnSave = () => {
     onSave({
       code,
