@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC, useEffect, useMemo} from 'react';
 import {
   BackHandler,
   Dimensions,
@@ -21,6 +21,8 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
     });
   }, [navigation]);
 
+  const menu = useMemo(() => <Menu navigation={navigation} />, [navigation]);
+
   return (
     <SafeAreaView style={styles.screen}>
       <ImageBackground source={BACKGROUND.secondary} style={styles.background}>
@@ -30,7 +32,7 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
             <Text>Ads</Text>
           </Ads>
           <Balance />
-          <Menu navigation={navigation} />
+          {menu}
         </View>
       </ImageBackground>
     </SafeAreaView>
