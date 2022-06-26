@@ -52,6 +52,8 @@ export interface SecondHeaderProps extends ScreenProps {
 
 export interface SearchBarProps {
   title: string;
+  value?: string;
+  icon?: any;
   onPress: () => void;
   onChangeText?: (text: string) => void;
   onFocus: () => void;
