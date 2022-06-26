@@ -4,8 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import React, {FC, useCallback, useMemo} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {color} from '../../constant/theme';
 import {PartDetail, PartListProps} from '../../screens/interface';
 import RenderItem from './RenderItem';
