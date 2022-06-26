@@ -178,14 +178,10 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
   );
 
   const getParts = useCallback(async () => {
-    try {
-      const _parts = await partService.getAll();
-      searchParts.current = _parts;
-      setParts(_parts);
-    } finally {
-      hideAlert();
-    }
-  }, [hideAlert, partService]);
+    const _parts = await partService.getAll();
+    searchParts.current = _parts;
+    setParts(_parts);
+  }, [partService]);
 
   const handleStock = useCallback((total: number) => {
     setStock(total);
@@ -203,11 +199,11 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
       const updating = await partService.update(id, {
         ...stockModalValue!,
         quantity: stock,
+        time: Date.now(),
       });
       statusAlert(updating.message, updating.status);
       if (updating.status === ResultStatus.SUCCESS) {
-        const indexOf = partsMemo.indexOf(stockModalValue!);
-        partsMemo[indexOf] = updating.data!;
+        await getParts();
         stockModalRef.current?.dismiss();
       }
     } catch (error) {
@@ -239,7 +235,7 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
 
       if (saving.status === ResultStatus.SUCCESS) {
         setShowAddPartForm(false);
-        parts.push(saving.data!);
+        await getParts();
       }
     } catch (error) {
       statusAlert('Ada Kesalahan', ResultStatus.ERROR);
@@ -259,19 +255,18 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
         if (updating.status === ResultStatus.SUCCESS) {
           detailModalRef.current?.close();
           setEditFormShow(false);
-          const indexOf = partsMemo.indexOf(detail!);
-          partsMemo[indexOf] = updating.data!;
+          await getParts();
         }
       } catch (error) {
         statusAlert('Ada Kesalahan', ResultStatus.ERROR);
       }
     },
     [
-      detail,
+      detail?.id,
       formPartValidation,
+      getParts,
       loadAlert,
       partService,
-      partsMemo,
       statusAlert,
     ],
   );
@@ -287,17 +282,14 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
         const deleting = await partService.delete(part.id!);
         statusAlert(deleting.message, deleting.status);
         if (deleting.status === ResultStatus.SUCCESS) {
-          const indexPart = parts.indexOf(part);
-          if (indexPart > -1) {
-            parts.splice(indexPart, 1);
-          }
+          detailModalRef.current?.close();
+          await getParts();
         }
-        detailModalRef.current?.close();
       } catch (error) {
         statusAlert('Ada Kesalahan', ResultStatus.ERROR);
       }
     },
-    [loadAlert, partService, parts, statusAlert],
+    [getParts, loadAlert, partService, statusAlert],
   );
 
   const handleDeletePart = useCallback(
