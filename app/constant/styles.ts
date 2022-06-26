@@ -19,4 +19,20 @@ export const text = StyleSheet.create({
     fontSize: 18,
     color: color.lightGray,
   },
+  secondarySmall: {
+    fontSize: 12,
+    color: color.darkGray,
+  },
+  secondaryMedium: {
+    fontSize: 14,
+    color: color.darkGray,
+  },
+  secondaryMediumBold: {
+    fontSize: 14,
+    color: color.black,
+  },
+  secondaryLarge: {
+    fontSize: 18,
+    color: color.black,
+  },
 });
