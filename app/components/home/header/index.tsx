@@ -18,17 +18,6 @@ import {color} from '../../../constant/theme';
 import {ScreenProps} from '../../../screens/interface';
 import CardButton from '../../CardButton';
 
-const cardButton = [
-  {id: 1, name: 'Servis', image: ICON.service, screen: 'ServiceScreen'},
-  {id: 2, name: 'Spare Part', image: ICON.sparePart, screen: 'PartScreen'},
-  {
-    id: 3,
-    name: 'Transaksi',
-    image: ICON.PART.coolant,
-    screen: 'TransactionScreen',
-  },
-];
-
 interface HeaderProps extends ScreenProps {}
 
 const Header: FC<HeaderProps> = ({navigation}) => {
@@ -41,7 +30,21 @@ const Header: FC<HeaderProps> = ({navigation}) => {
 
   const button = useMemo(
     () =>
-      cardButton.map(btn => (
+      [
+        {id: 1, name: 'Servis', image: ICON.service, screen: 'ServiceScreen'},
+        {
+          id: 2,
+          name: 'Spare Part',
+          image: ICON.sparePart,
+          screen: 'PartScreen',
+        },
+        {
+          id: 3,
+          name: 'Transaksi',
+          image: ICON.PART.coolant,
+          screen: 'TransactionScreen',
+        },
+      ].map(btn => (
         <CardButton
           key={btn.id}
           title={btn.name}
