@@ -43,7 +43,7 @@ const Form: FC<FormProps> = ({visible, children, iosIcon, title, onClose}) => {
           <Text style={styles.titleText}>{title}</Text>
         </View>
         {/* eslint-disable-next-line react-native/no-inline-styles */}
-        <ScrollView scrollEnabled={true} style={{flex: 1, paddingBottom: 20}}>
+        <ScrollView scrollEnabled={true} style={{flex: 1}}>
           {children}
         </ScrollView>
       </SafeAreaView>
