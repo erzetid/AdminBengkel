@@ -9,7 +9,7 @@ export interface IVehicle {
   year: number;
   plate: string;
   registrationNumber: string;
-  owner: string;
+  owner?: string;
 }
 
 export class Vehicle {

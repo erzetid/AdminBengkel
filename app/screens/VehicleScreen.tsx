@@ -21,7 +21,7 @@ import VehicleList from '../components/vehicle/VehicleList';
 import {ResultStatus} from '../constant/enum';
 import {color} from '../constant/theme';
 import LocalDB from '../database';
-import {Vehicle} from '../model/Vehicle';
+import {IVehicle, Vehicle} from '../model/Vehicle';
 import {AwesomeAlertProps, VehicleScreenProps} from './interface';
 
 const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
@@ -34,6 +34,7 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
   const [visibleForm, setVisibleForm] = useState(false);
   const [vehicles, setVehicles] = useState<Vehicle[]>();
   const [optionAlert, setOptionAlert] = useState<AwesomeAlertProps>(emptyAlert);
+  const [value, setValue] = useState<IVehicle | null>(null);
 
   useEffect(() => {
     getVehicles();
@@ -108,15 +109,16 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
     [hideAlert],
   );
 
-  const getVehicles = async () => {
+  const getVehicles = useCallback(async () => {
     const vs = await vehicleService.getAll();
     setVehicles(vs);
-  };
+  }, [vehicleService]);
 
   const handleOnFocus = () => {};
   const handleVehicleForm = useCallback(async () => {
     setTitleForm('Tambah Kendaraan');
     setVisibleForm(true);
+    setValue(null);
   }, []);
   const handleOnAdd = async (v: Vehicle) => {
     loadAlert();
@@ -125,7 +127,7 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
       statusAlert(saving.message, saving.status);
       if (saving.status === ResultStatus.SUCCESS) {
         setVisibleForm(false);
-        vehicles?.push(saving.data!);
+        await getVehicles();
       }
     } catch (e) {
       statusAlert('Ada Kesalahan', ResultStatus.ERROR);
@@ -142,16 +144,13 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
         const deleting = await vehicleService.delete(v.id!);
         statusAlert(deleting.message, deleting.status);
         if (deleting.status === ResultStatus.SUCCESS) {
-          const indexPart = vehicles?.indexOf(v);
-          if (indexPart! > -1) {
-            vehicles?.splice(indexPart!, 1);
-          }
+          await getVehicles();
         }
       } catch (e) {
         statusAlert('Ada Kesalahan', ResultStatus.ERROR);
       }
     },
-    [loadAlert, statusAlert, vehicleService, vehicles],
+    [getVehicles, loadAlert, statusAlert, vehicleService],
   );
 
   const handleOnDelete = useCallback(
@@ -164,9 +163,27 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
     },
     [confirmAlert, handleOnDeletePress, hideAlert],
   );
-  const handleOnUpdate = useCallback(() => {
-    setTitleForm('Update Kendaraan');
+  const handleUpdateVehicleForm = useCallback((v: Vehicle) => {
+    setValue({...v});
+    setTitleForm('Edit Kendaraan');
+    setVisibleForm(true);
   }, []);
+  const handleOnUpdate = useCallback(
+    async (v: Vehicle) => {
+      loadAlert();
+      try {
+        const updating = await vehicleService.update(v.id!, v);
+        statusAlert(updating.message, updating.status);
+        if (updating.status === ResultStatus.SUCCESS) {
+          setVisibleForm(false);
+          await getVehicles();
+        }
+      } catch (e) {
+        statusAlert('Ada Kesalahan', ResultStatus.ERROR);
+      }
+    },
+    [getVehicles, loadAlert, statusAlert, vehicleService],
+  );
 
   const searchBarElement = useMemo(
     () => (
@@ -189,6 +206,7 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
       <SecondHeader title="Kendaraan" navigation={navigation} />
       {searchBarElement}
       <View
+        // eslint-disable-next-line react-native/no-inline-styles
         style={{
           padding: 10,
           backgroundColor: color.white,
@@ -198,12 +216,13 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
         <VehicleList
           vehicles={vehicles!}
           onDelete={handleOnDelete}
-          onUpdate={handleOnUpdate}
+          onUpdate={handleUpdateVehicleForm}
         />
       </View>
       <VehicleForm
         onCancel={handleCancel}
-        onSave={handleOnAdd}
+        initial={value}
+        onSave={titleForm === 'Tambah Kendaraan' ? handleOnAdd : handleOnUpdate}
         title={titleForm}
         visible={visibleForm}
       />

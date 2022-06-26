@@ -3,17 +3,18 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import React, {FC, useCallback, useMemo, useState} from 'react';
+import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {OutlinedTextField} from 'rn-material-ui-textfield';
 import Form from '.';
 import {text} from '../../constant/styles';
 import {color} from '../../constant/theme';
-import {Vehicle} from '../../model/Vehicle';
+import {IVehicle, Vehicle} from '../../model/Vehicle';
 
 interface VehicleFormProps {
   visible: boolean;
   title: string;
+  initial: IVehicle | null;
   onSave: (vehicle: Vehicle) => void;
   onCancel: () => void;
   onValidate?: (isValidate: boolean) => void;
@@ -21,6 +22,7 @@ interface VehicleFormProps {
 const VehicleForm: FC<VehicleFormProps> = ({
   visible,
   title,
+  initial,
   onCancel,
   onSave,
 }) => {
@@ -39,6 +41,35 @@ const VehicleForm: FC<VehicleFormProps> = ({
     registrationNumber: 'Harus diisi.',
     year: 'Harus diisi.',
   });
+
+  useEffect(() => {
+    if (initial) {
+      setVehicle({...initial});
+      setError({
+        brand: '',
+        model: '',
+        plate: '',
+        registrationNumber: '',
+        year: '',
+      });
+      setIsValidate(true);
+    } else {
+      setVehicle({
+        brand: '',
+        model: '',
+        plate: '',
+        registrationNumber: '',
+        year: 0,
+      });
+      setError({
+        brand: 'Harus diisi.',
+        model: 'Harus diisi.',
+        plate: 'Harus diisi.',
+        registrationNumber: 'Harus diisi.',
+        year: 'Harus diisi.',
+      });
+    }
+  }, [initial]);
 
   const isVisible = useMemo(() => visible, [visible]);
   const handleOnSave = useCallback(() => {
@@ -66,7 +97,7 @@ const VehicleForm: FC<VehicleFormProps> = ({
 
   const onValidation = (obj: any): void => {
     for (const key in obj) {
-      if (!obj[key]) {
+      if (!obj[key] && key !== 'owner') {
         return setIsValidate(false);
       }
     }
