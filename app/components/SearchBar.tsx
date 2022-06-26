@@ -16,7 +16,7 @@ import {color} from '../constant/theme';
 import {SearchBarProps} from '../screens/interface';
 
 const SearchBar = forwardRef<TextInput, SearchBarProps>(
-  ({title, onPress, onChangeText, onFocus}, ref) => {
+  ({title, value, icon, onPress, onChangeText, onFocus}, ref) => {
     const handleOnPress = useCallback(() => {
       onPress();
     }, [onPress]);
@@ -36,6 +36,7 @@ const SearchBar = forwardRef<TextInput, SearchBarProps>(
             ref={ref}
             style={styles.searchBarInput}
             placeholder={title}
+            value={value}
             placeholderTextColor={color.gray}
             maxLength={35}
             onChangeText={onChangeText}
@@ -43,7 +44,11 @@ const SearchBar = forwardRef<TextInput, SearchBarProps>(
           />
         </View>
         <TouchableOpacity style={styles.searchBarBtn} onPress={handleOnPress}>
-          <Text style={styles.searchBarBtnText}>Cari</Text>
+          {icon ? (
+            <Icon name={`ios-${icon}`} size={40} color={color.white} />
+          ) : (
+            <Text style={styles.searchBarBtnText}>{'Cari'}</Text>
+          )}
         </TouchableOpacity>
       </View>
     );
@@ -81,6 +86,7 @@ const styles = StyleSheet.create({
     minWidth: 50,
     justifyContent: 'center',
     borderRadius: 5,
+    alignItems: 'center',
   },
   searchBarBtnText: {textAlign: 'center', color: color.white},
 });
