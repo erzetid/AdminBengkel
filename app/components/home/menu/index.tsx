@@ -4,7 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import {NavigationProp, ParamListBase} from '@react-navigation/native';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {
   Dimensions,
   SafeAreaView,
@@ -41,26 +41,27 @@ export const menusDefault: MenuButtonProps[] = [
 ];
 
 const FeatureMenu = ({menus = menusDefault, navigation}: FeatureMenuProps) => {
-  const mapMenus = groupArrayByMultiple(menus, 3);
+  const {navigate} = navigation!;
+  const mapMenus = useMemo(() => groupArrayByMultiple(menus, 3), [menus]);
   const handleOnPress = (index: number) => {
     switch (index) {
       case 0:
-        navigation?.navigate('CashFlowScreen');
+        navigate('CashFlowScreen');
         break;
       case 1:
-        navigation?.navigate('CustomerScreen');
+        navigate('CustomerScreen');
         break;
       case 2:
-        navigation?.navigate('VehicleScreen');
+        navigate('VehicleScreen');
         break;
       case 3:
-        navigation?.navigate('ReportScreen');
+        navigate('ReportScreen');
         break;
       case 4:
-        navigation?.navigate('NoteScreen');
+        navigate('NoteScreen');
         break;
       case 5:
-        navigation?.navigate('DonationScreen');
+        navigate('DonationScreen');
         break;
       default:
         break;
