@@ -73,7 +73,7 @@ const VehicleForm: FC<VehicleFormProps> = ({
 
   const isVisible = useMemo(() => visible, [visible]);
   const handleOnSave = useCallback(() => {
-    const v = new Vehicle({...vehicle});
+    const v = new Vehicle({...vehicle, time: Date.now()});
     onSave(v);
   }, [onSave, vehicle]);
   const handleOnCancel = useCallback(() => {

@@ -32,7 +32,7 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
   const [search, setSearch] = useState('');
   const [titleForm, setTitleForm] = useState('Tambah Kendaraan');
   const [visibleForm, setVisibleForm] = useState(false);
-  const [vehicles, setVehicles] = useState<Vehicle[]>();
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [optionAlert, setOptionAlert] = useState<AwesomeAlertProps>(emptyAlert);
   const [value, setValue] = useState<IVehicle | null>(null);
 
@@ -214,7 +214,15 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
           flex: 1,
         }}>
         <VehicleList
-          vehicles={vehicles!}
+          vehicles={vehicles.sort((a, b) => {
+            if (a.time < b.time) {
+              return 1;
+            }
+            if (a.time > b.time) {
+              return -1;
+            }
+            return 0;
+          })}
           onDelete={handleOnDelete}
           onUpdate={handleUpdateVehicleForm}
         />

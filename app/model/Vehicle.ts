@@ -10,6 +10,7 @@ export interface IVehicle {
   plate: string;
   registrationNumber: string;
   owner?: string;
+  time?: number;
 }
 
 export class Vehicle {
@@ -20,6 +21,7 @@ export class Vehicle {
   plate = '';
   registrationNumber = '';
   owner = '';
+  time = Date.now();
 
   constructor(data?: {
     id?: string;
@@ -29,6 +31,7 @@ export class Vehicle {
     plate?: string;
     year?: number;
     registrationNumber?: string;
+    time?: number;
   }) {
     this.id = data?.id;
     this.owner = data?.owner || this.owner;
@@ -38,6 +41,7 @@ export class Vehicle {
     this.year = data?.year || this.year;
     this.registrationNumber =
       data?.registrationNumber || this.registrationNumber;
+    this.time = data?.time || this.time;
   }
 
   setId(brand: string): Vehicle {
@@ -72,6 +76,10 @@ export class Vehicle {
 
   setRegistrationNumber(registrationNumber: string): Vehicle {
     this.registrationNumber = registrationNumber;
+    return this;
+  }
+  setTime(time: number): Vehicle {
+    this.time = time;
     return this;
   }
 
