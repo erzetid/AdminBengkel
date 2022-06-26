@@ -4,8 +4,10 @@
 // https://opensource.org/licenses/MIT
 
 import {parts} from './Part';
+import {vehicles} from './Vehicle';
 
 const LocalDB = {
   parts,
+  vehicles,
 };
 export default LocalDB;
