@@ -6,7 +6,7 @@
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useMemo} from 'react';
+import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {
@@ -38,56 +38,54 @@ export type MainStackParamList = {
 };
 
 const MainStack = createNativeStackNavigator<MainStackParamList>();
+
+const screens: {name: any; component: any}[] = [
+  {
+    name: 'HomeScreen',
+    component: HomeScreen,
+  },
+  {
+    name: 'PartScreen',
+    component: PartScreen,
+  },
+  {
+    name: 'ReportScreen',
+    component: ReportScreen,
+  },
+  {
+    name: 'SplashScreen',
+    component: SplashScreen,
+  },
+  {
+    name: 'ServiceScreen',
+    component: ServiceScreen,
+  },
+  {
+    name: 'VehicleScreen',
+    component: VehicleScreen,
+  },
+  {
+    name: 'CustomerScreen',
+    component: CustomerScreen,
+  },
+  {
+    name: 'CashFlowScreen',
+    component: CashFlowScreen,
+  },
+  {
+    name: 'DonationScreen',
+    component: DonationScreen,
+  },
+  {
+    name: 'NoteScreen',
+    component: NoteScreen,
+  },
+  {
+    name: 'TransactionScreen',
+    component: TransactionScreen,
+  },
+];
 export default () => {
-  const screens: {name: any; component: any}[] = useMemo(
-    () => [
-      {
-        name: 'HomeScreen',
-        component: HomeScreen,
-      },
-      {
-        name: 'PartScreen',
-        component: PartScreen,
-      },
-      {
-        name: 'ReportScreen',
-        component: ReportScreen,
-      },
-      {
-        name: 'SplashScreen',
-        component: SplashScreen,
-      },
-      {
-        name: 'ServiceScreen',
-        component: ServiceScreen,
-      },
-      {
-        name: 'VehicleScreen',
-        component: VehicleScreen,
-      },
-      {
-        name: 'CustomerScreen',
-        component: CustomerScreen,
-      },
-      {
-        name: 'CashFlowScreen',
-        component: CashFlowScreen,
-      },
-      {
-        name: 'DonationScreen',
-        component: DonationScreen,
-      },
-      {
-        name: 'NoteScreen',
-        component: NoteScreen,
-      },
-      {
-        name: 'TransactionScreen',
-        component: TransactionScreen,
-      },
-    ],
-    [],
-  );
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <BottomSheetModalProvider>
