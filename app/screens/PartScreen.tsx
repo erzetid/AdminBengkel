@@ -45,7 +45,7 @@ const actions = [
   },
 ];
 const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
-  const partService = LocalDB.parts;
+  const partService = useMemo(() => LocalDB.parts, []);
   const stockModalRef = useRef<BottomSheetModal>(null);
   const detailModalRef = useRef<BottomSheetModal>(null);
   const searchBarRef = useRef<TextInput>(null);
@@ -89,19 +89,15 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
   }, [optionAlert]);
 
   useEffect(() => {
-    loadAlert();
+    // loadAlert();
     const init = async () => {
       await getParts();
     };
-
-    setTimeout(() => {
-      init();
-    }, 150);
+    init();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    // console.log(tasks);
     const backAction = () => {
       stockModalRef.current && stockModalRef.current.close();
       detailModalRef.current && detailModalRef.current.close();
@@ -250,54 +246,70 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
     }
   };
 
-  const handleUpdatePart = async (part: PartDetail) => {
-    if (!formPartValidation(part)) {
-      statusAlert('Mohon isi data part dengan benar', ResultStatus.FAILED);
-      return;
-    }
-    loadAlert();
-    try {
-      const updating = await partService.update(detail?.id!, part);
-      statusAlert(updating.message, updating.status);
-      if (updating.status === ResultStatus.SUCCESS) {
-        detailModalRef.current?.close();
-        setEditFormShow(false);
-        const indexOf = partsMemo.indexOf(detail!);
-        partsMemo[indexOf] = updating.data!;
+  const handleUpdatePart = useCallback(
+    async (part: PartDetail) => {
+      if (!formPartValidation(part)) {
+        statusAlert('Mohon isi data part dengan benar', ResultStatus.FAILED);
+        return;
       }
-    } catch (error) {
-      statusAlert('Ada Kesalahan', ResultStatus.ERROR);
-    }
-  };
+      loadAlert();
+      try {
+        const updating = await partService.update(detail?.id!, part);
+        statusAlert(updating.message, updating.status);
+        if (updating.status === ResultStatus.SUCCESS) {
+          detailModalRef.current?.close();
+          setEditFormShow(false);
+          const indexOf = partsMemo.indexOf(detail!);
+          partsMemo[indexOf] = updating.data!;
+        }
+      } catch (error) {
+        statusAlert('Ada Kesalahan', ResultStatus.ERROR);
+      }
+    },
+    [
+      detail,
+      formPartValidation,
+      loadAlert,
+      partService,
+      partsMemo,
+      statusAlert,
+    ],
+  );
   const handleItemPress = useCallback((value: PartDetail) => {
     setDetail(value);
     detailModalRef.current?.present();
   }, []);
 
-  const handlePressDeletePart = async (part: PartDetail) => {
-    loadAlert();
-    try {
-      const deleting = await partService.delete(part.id!);
-      statusAlert(deleting.message, deleting.status);
-      if (deleting.status === ResultStatus.SUCCESS) {
-        const indexPart = parts.indexOf(part);
-        if (indexPart > -1) {
-          parts.splice(indexPart, 1);
+  const handlePressDeletePart = useCallback(
+    async (part: PartDetail) => {
+      loadAlert();
+      try {
+        const deleting = await partService.delete(part.id!);
+        statusAlert(deleting.message, deleting.status);
+        if (deleting.status === ResultStatus.SUCCESS) {
+          const indexPart = parts.indexOf(part);
+          if (indexPart > -1) {
+            parts.splice(indexPart, 1);
+          }
         }
+        detailModalRef.current?.close();
+      } catch (error) {
+        statusAlert('Ada Kesalahan', ResultStatus.ERROR);
       }
-      detailModalRef.current?.close();
-    } catch (error) {
-      statusAlert('Ada Kesalahan', ResultStatus.ERROR);
-    }
-  };
+    },
+    [loadAlert, partService, parts, statusAlert],
+  );
 
-  const handleDeletePart = (part: PartDetail) => {
-    confirmAlert(
-      {message: 'Apakah kamu yakin akan menghapus part ini?'},
-      hideAlert,
-      () => handlePressDeletePart(part),
-    );
-  };
+  const handleDeletePart = useCallback(
+    (part: PartDetail) => {
+      confirmAlert(
+        {message: 'Apakah kamu yakin akan menghapus part ini?'},
+        hideAlert,
+        () => handlePressDeletePart(part),
+      );
+    },
+    [confirmAlert, handlePressDeletePart, hideAlert],
+  );
 
   const searchingParts = useCallback((text: string) => {
     const result = searchParts.current?.filter(
