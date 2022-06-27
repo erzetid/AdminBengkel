@@ -1,4 +1,7 @@
 {
   "name": "AdminBengkel",
-  "displayName": "Admin Bengkel"
+  "displayName": "Admin Bengkel",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-5427566701323504~3199451124"
+  }
 }
