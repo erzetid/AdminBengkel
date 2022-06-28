@@ -45,7 +45,6 @@ const actions = [
   },
 ];
 const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
-  const partService = useMemo(() => LocalDB.parts, []);
   const stockModalRef = useRef<BottomSheetModal>(null);
   const detailModalRef = useRef<BottomSheetModal>(null);
   const searchBarRef = useRef<TextInput>(null);
@@ -61,6 +60,7 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
   const [showAddPartForm, setShowAddPartForm] = useState(false);
   const [editFormShow, setEditFormShow] = useState(false);
   const partsMemo = useMemo(() => parts, [parts]);
+  const partService = useMemo(() => LocalDB.parts, []);
   const floatingActionMemo = useMemo(() => {
     return (
       <FloatingAction
@@ -320,7 +320,7 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
       <SecondHeader navigation={navigation} title={'Spare Part'} />
       <SearchBar
         ref={searchBarRef}
-        title={'Carai nama/nomor part'}
+        title={'Cari nama/nomor part'}
         onPress={handleSearch}
         onFocus={getParts}
         onChangeText={text => {
