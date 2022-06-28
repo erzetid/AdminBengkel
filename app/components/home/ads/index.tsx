@@ -5,7 +5,6 @@
 
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {color} from '../../../constant/theme';
 
 interface AdsProps {
   children?: JSX.Element | JSX.Element[];
@@ -19,7 +18,6 @@ export default Ads;
 
 const styles = StyleSheet.create({
   content: {
-    backgroundColor: color.gray,
     minHeight: 80,
     borderRadius: 5,
     marginTop: 10,
