@@ -1,27 +1,68 @@
-import React, {FC, useEffect, useMemo} from 'react';
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   BackHandler,
   Dimensions,
   ImageBackground,
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 import {BACKGROUND} from '../assets/images';
-import {Ads, Balance, Header, Menu} from '../components/home';
+import AlertCustom, {emptyAlert} from '../components/AlertCustom';
+import {Ads, Header, Menu} from '../components/home';
 import {color} from '../constant/theme';
-import {HomeScreenProps} from './interface';
+import {AwesomeAlertProps, HomeScreenProps} from './interface';
 
+const adUnitId = __DEV__
+  ? TestIds.BANNER
+  : 'ca-app-pub-5427566701323504/2055860036';
 const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      BackHandler.exitApp();
-      return true;
-    });
-  }, [navigation]);
-
+  const optionAlertRef = useRef<AwesomeAlertProps>(emptyAlert);
+  const [optionAlert, setOptionAlert] = useState<AwesomeAlertProps>(emptyAlert);
   const menu = useMemo(() => <Menu navigation={navigation} />, [navigation]);
+
+  useEffect(() => {
+    optionAlertRef.current = optionAlert;
+  }, [optionAlert]);
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        confirmAlert();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const hideAlert = useCallback(() => {
+    setOptionAlert({...optionAlertRef.current, show: false, progress: false});
+  }, []);
+  const confirmAlert = useCallback(() => {
+    setOptionAlert({
+      ...optionAlertRef.current,
+      show: true,
+      title: 'Admin Bengkel',
+      message: 'Anda yakin akan keluar?',
+      buttonConfirmText: 'Ya, lanjutkan',
+      buttonCancelText: 'Tidak, batal',
+      buttonCancelColor: '#D0D0D0',
+      buttonConfirmColor: color.red,
+      buttonConfirmShow: true,
+      buttonCancelShow: true,
+      buttonCancelFunction: () => hideAlert(),
+      buttonConfirmFunction: () => BackHandler.exitApp(),
+    });
+  }, [hideAlert]);
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -29,12 +70,19 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
         <View style={styles.content}>
           <Header navigation={navigation} />
           <Ads>
-            <Text>Ads</Text>
+            <BannerAd
+              unitId={adUnitId}
+              size={BannerAdSize.LARGE_BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
           </Ads>
-          <Balance />
+          {/* <Balance /> */}
           {menu}
         </View>
       </ImageBackground>
+      <AlertCustom option={optionAlert} />
     </SafeAreaView>
   );
 };
