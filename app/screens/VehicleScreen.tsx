@@ -11,7 +11,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {TextInput, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import AlertCustom, {emptyAlert} from '../components/AlertCustom';
 import VehicleForm from '../components/form/VehicleForm';
 import SearchBar from '../components/SearchBar';
@@ -26,7 +26,7 @@ import {AwesomeAlertProps, VehicleScreenProps} from './interface';
 
 const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
   const vehicleService = useMemo(() => LocalDB.vehicles, []);
-  const searchBarRef = useRef<TextInput>(null);
+  const vehicleRef = useRef<Vehicle[]>([]);
   const optionAlertRef = useRef<AwesomeAlertProps>(emptyAlert);
 
   const [search, setSearch] = useState('');
@@ -37,7 +37,10 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
   const [value, setValue] = useState<IVehicle | null>(null);
 
   useEffect(() => {
-    getVehicles();
+    const init = async () => {
+      getVehicles();
+    };
+    init();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
@@ -111,6 +114,7 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
 
   const getVehicles = useCallback(async () => {
     const vs = await vehicleService.getAll();
+    vehicleRef.current = vs;
     setVehicles(vs);
   }, [vehicleService]);
 
@@ -185,10 +189,22 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
     [getVehicles, loadAlert, statusAlert, vehicleService],
   );
 
+  const searchingVehicles = useCallback((text: string) => {
+    const _vehicles = vehicleRef.current;
+    if (text.length < 1) {
+      return setVehicles(_vehicles);
+    }
+    const result = _vehicles.filter(
+      (item: Vehicle) =>
+        item.plate.toLowerCase().includes(text.toLowerCase()) ||
+        item.registrationNumber.toLowerCase().includes(text.toLowerCase()),
+    );
+    setVehicles(result || []);
+  }, []);
+
   const searchBarElement = useMemo(
     () => (
       <SearchBar
-        ref={searchBarRef}
         title={'Cari no plat/no mesin'}
         value={search}
         icon={'add'}
@@ -196,23 +212,17 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
         onFocus={handleOnFocus}
         onChangeText={t => {
           setSearch(t);
+          searchingVehicles(t);
         }}
       />
     ),
-    [handleVehicleForm, search],
+    [handleVehicleForm, search, searchingVehicles],
   );
   return (
     <SecondBackground>
       <SecondHeader title="Kendaraan" navigation={navigation} />
       {searchBarElement}
-      <View
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={{
-          padding: 10,
-          backgroundColor: color.white,
-          borderRadius: 5,
-          flex: 1,
-        }}>
+      <View style={styles.content}>
         <VehicleList
           vehicles={vehicles.sort((a, b) => {
             if (a.time < b.time) {
@@ -240,3 +250,12 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
 };
 
 export default VehicleScreen;
+
+const styles = StyleSheet.create({
+  content: {
+    padding: 10,
+    backgroundColor: color.white,
+    borderRadius: 5,
+    flex: 1,
+  },
+});
