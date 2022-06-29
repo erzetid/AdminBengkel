@@ -324,13 +324,12 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
         onPress={handleSearch}
         onFocus={getParts}
         onChangeText={text => {
-          if (text.length > 0) {
-            setParts(searchParts.current!);
-          }
           if (searchBarRef.current) {
+            if (text.length < 1) {
+              return setParts(searchParts.current!);
+            }
             searchBarText.current = text;
             searchingParts(text);
-            console.log(parts.length);
           }
         }}
       />
