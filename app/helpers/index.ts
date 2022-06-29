@@ -24,5 +24,23 @@ function getImageSource(image: string, type?: 'PART'): any {
   }
   return ICON[image as keyof typeof ICON];
 }
+function truncateString(str: string, num: number) {
+  if (str.length <= num) {
+    return str;
+  }
+  return str.slice(0, num) + '...';
+}
 
-export {getImageSource, groupArrayByMultiple};
+function greeting() {
+  const today = new Date();
+  const hour = today.getHours();
+  if (hour < 12) {
+    return 'Selamat Pagi ';
+  }
+  if (hour < 18) {
+    return 'Selamat Siang ';
+  }
+  return 'Selamat Malam ';
+}
+
+export {getImageSource, groupArrayByMultiple, truncateString, greeting};
