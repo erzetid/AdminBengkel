@@ -62,6 +62,11 @@ const DonationScreen: FC<DonationScreenProps> = ({navigation}) => {
     <SecondBackground>
       <SecondHeader title="Donasi" navigation={navigation} />
       <View style={styles.content}>
+        <Text style={styles.textIntro}>
+          {'   '}Dengan anda berdonasi secara tidak langsung anda berkontribusi
+          untuk untuk pengembangan apliasi AdminBengkel dan pembuatan aplikasi
+          booking servis untuk calon konsumen anda di seluruh Indonesia.
+        </Text>
         <TouchableOpacity
           style={loaded ? styles.btnActive : styles.btnNotActive}
           onPress={handleOnClickAds}
@@ -96,8 +101,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: color.white,
     borderRadius: 5,
-    justifyContent: 'center',
   },
+  textIntro: {color: color.darkGray, textAlign: 'justify'},
   btnActive: {
     backgroundColor: color.lightBlue,
     padding: 15,
