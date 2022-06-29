@@ -6,10 +6,10 @@
 import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {OutlinedTextField} from 'rn-material-ui-textfield';
-import Form from '.';
 import {text} from '../../constant/styles';
 import {color} from '../../constant/theme';
 import {IVehicle, Vehicle} from '../../model/Vehicle';
+import Form from './Form';
 
 interface VehicleFormProps {
   visible: boolean;

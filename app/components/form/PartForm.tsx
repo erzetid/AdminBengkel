@@ -11,7 +11,7 @@ import {ICON} from '../../assets/icon/index';
 import {Category, ImagePart} from '../../constant/enum';
 import {color} from '../../constant/theme';
 import {PartDetail} from '../../screens/interface';
-import Form from './index';
+import Form from './Form';
 
 interface PartFormProps {
   visible: boolean;
