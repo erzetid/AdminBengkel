@@ -20,7 +20,6 @@ export class Vehicle {
   year = 2000;
   plate = '';
   registrationNumber = '';
-  owner = '';
   time = Date.now();
 
   constructor(data?: {
@@ -34,7 +33,6 @@ export class Vehicle {
     time?: number;
   }) {
     this.id = data?.id;
-    this.owner = data?.owner || this.owner;
     this.brand = data?.brand || this.brand;
     this.model = data?.model || this.model;
     this.plate = data?.plate || this.plate;
@@ -46,11 +44,6 @@ export class Vehicle {
 
   setId(brand: string): Vehicle {
     this.brand = brand;
-    return this;
-  }
-
-  setOwner(owner: string): Vehicle {
-    this.owner = owner;
     return this;
   }
 
@@ -85,7 +78,6 @@ export class Vehicle {
 
   toJSON(): IVehicle {
     return {
-      owner: this.owner,
       brand: this.brand,
       model: this.model,
       year: this.year,

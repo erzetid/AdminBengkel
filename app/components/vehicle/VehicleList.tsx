@@ -52,7 +52,6 @@ const VehicleList: FC<VehicleListProps> = ({vehicles, onUpdate, onDelete}) => {
                 style={
                   text.secondaryMediumBold
                 }>{`${item.plate} (${item.brand})`}</Text>
-              <Text style={text.secondarySmall}>{item.owner}</Text>
               <Text
                 style={
                   text.secondarySmall
