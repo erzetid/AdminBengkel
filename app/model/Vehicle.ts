@@ -4,6 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 export interface IVehicle {
+  id?: string;
   brand: string;
   model: string;
   year: number;
@@ -20,6 +21,7 @@ export class Vehicle {
   year = 2000;
   plate = '';
   registrationNumber = '';
+  owner?: string;
   time = Date.now();
 
   constructor(data?: {

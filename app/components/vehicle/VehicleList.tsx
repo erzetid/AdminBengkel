@@ -16,24 +16,24 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {ICON} from '../../assets/icon';
 import {text} from '../../constant/styles';
 import {color} from '../../constant/theme';
-import {Vehicle} from '../../model/Vehicle';
+import {IVehicle} from '../../model/Vehicle';
 
 interface VehicleListProps {
-  vehicles: Vehicle[];
-  onUpdate: (v: Vehicle) => void;
-  onDelete: (v: Vehicle) => void;
+  vehicles: IVehicle[];
+  onUpdate: (v: IVehicle) => void;
+  onDelete: (v: IVehicle) => void;
 }
 
 const VehicleList: FC<VehicleListProps> = ({vehicles, onUpdate, onDelete}) => {
   const handleOnDelete = useCallback(
-    (v: Vehicle) => {
+    (v: IVehicle) => {
       onDelete(v);
     },
     [onDelete],
   );
 
   const handleOnUpdate = useCallback(
-    (v: Vehicle) => {
+    (v: IVehicle) => {
       onUpdate(v);
     },
     [onUpdate],
@@ -41,7 +41,7 @@ const VehicleList: FC<VehicleListProps> = ({vehicles, onUpdate, onDelete}) => {
 
   const render = useMemo(
     () =>
-      ({item}: {item: Vehicle}) =>
+      ({item}: {item: IVehicle}) =>
         (
           <View style={styles.content}>
             <View style={styles.imageContent}>

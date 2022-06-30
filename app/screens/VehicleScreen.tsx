@@ -21,18 +21,18 @@ import VehicleList from '../components/vehicle/VehicleList';
 import {ResultStatus} from '../constant/enum';
 import {color} from '../constant/theme';
 import LocalDB from '../database';
-import {IVehicle, Vehicle} from '../model/Vehicle';
+import {IVehicle} from '../model/Vehicle';
 import {AwesomeAlertProps, VehicleScreenProps} from './interface';
 
 const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
   const vehicleService = useMemo(() => LocalDB.vehicles, []);
-  const vehicleRef = useRef<Vehicle[]>([]);
+  const vehicleRef = useRef<IVehicle[]>([]);
   const optionAlertRef = useRef<AwesomeAlertProps>(emptyAlert);
 
   const [search, setSearch] = useState('');
   const [titleForm, setTitleForm] = useState('Tambah Kendaraan');
   const [visibleForm, setVisibleForm] = useState(false);
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [vehicles, setVehicles] = useState<IVehicle[]>([]);
   const [optionAlert, setOptionAlert] = useState<AwesomeAlertProps>(emptyAlert);
   const [value, setValue] = useState<IVehicle | null>(null);
 
@@ -124,7 +124,7 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
     setVisibleForm(true);
     setValue(null);
   }, []);
-  const handleOnAdd = async (v: Vehicle) => {
+  const handleOnAdd = async (v: IVehicle) => {
     loadAlert();
     try {
       const saving = await vehicleService.create(v);
@@ -142,7 +142,7 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
   }, []);
 
   const handleOnDeletePress = useCallback(
-    async (v: Vehicle) => {
+    async (v: IVehicle) => {
       loadAlert();
       try {
         const deleting = await vehicleService.delete(v.id!);
@@ -158,7 +158,7 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
   );
 
   const handleOnDelete = useCallback(
-    (v: Vehicle) => {
+    (v: IVehicle) => {
       confirmAlert(
         {message: 'Apakah kamu yakin akan menghapus kendaraan ini?'},
         () => hideAlert(),
@@ -167,13 +167,13 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
     },
     [confirmAlert, handleOnDeletePress, hideAlert],
   );
-  const handleUpdateVehicleForm = useCallback((v: Vehicle) => {
+  const handleUpdateVehicleForm = useCallback((v: IVehicle) => {
     setValue({...v});
     setTitleForm('Edit Kendaraan');
     setVisibleForm(true);
   }, []);
   const handleOnUpdate = useCallback(
-    async (v: Vehicle) => {
+    async (v: IVehicle) => {
       loadAlert();
       try {
         const updating = await vehicleService.update(v.id!, v);
@@ -195,7 +195,7 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
       return setVehicles(_vehicles);
     }
     const result = _vehicles.filter(
-      (item: Vehicle) =>
+      (item: IVehicle) =>
         item.plate.toLowerCase().includes(text.toLowerCase()) ||
         item.registrationNumber.toLowerCase().includes(text.toLowerCase()),
     );
@@ -225,10 +225,10 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
       <View style={styles.content}>
         <VehicleList
           vehicles={vehicles.sort((a, b) => {
-            if (a.time < b.time) {
+            if (a.time! < b.time!) {
               return 1;
             }
-            if (a.time > b.time) {
+            if (a.time! > b.time!) {
               return -1;
             }
             return 0;

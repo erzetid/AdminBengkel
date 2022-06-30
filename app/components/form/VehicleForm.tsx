@@ -8,14 +8,14 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {OutlinedTextField} from 'rn-material-ui-textfield';
 import {text} from '../../constant/styles';
 import {color} from '../../constant/theme';
-import {IVehicle, Vehicle} from '../../model/Vehicle';
+import {IVehicle} from '../../model/Vehicle';
 import Form from './Form';
 
 interface VehicleFormProps {
   visible: boolean;
   title: string;
   initial: IVehicle | null;
-  onSave: (vehicle: Vehicle) => void;
+  onSave: (vehicle: IVehicle) => void;
   onCancel: () => void;
   onValidate?: (isValidate: boolean) => void;
 }
@@ -73,8 +73,7 @@ const VehicleForm: FC<VehicleFormProps> = ({
 
   const isVisible = useMemo(() => visible, [visible]);
   const handleOnSave = useCallback(() => {
-    const v = new Vehicle({...vehicle, time: Date.now()});
-    onSave(v);
+    onSave({...vehicle, time: Date.now()});
   }, [onSave, vehicle]);
   const handleOnCancel = useCallback(() => {
     onCancel();
