@@ -43,4 +43,23 @@ function greeting() {
   return 'Selamat Malam ';
 }
 
-export {getImageSource, groupArrayByMultiple, truncateString, greeting};
+function filterArrayContain<T1 extends {[key: string]: any}, T2 extends T1>(
+  arr: T1[],
+  arr1: T2[],
+  field: keyof T1,
+): T1[] {
+  return arr.filter(t => arr1.findIndex(i => i[field] === t[field]) < 0);
+}
+
+function filterArray<ID, T extends {id: ID}>(arr: T[], ids: ID[]): T[] {
+  return arr.filter(t => ids.indexOf(t.id) > -1);
+}
+
+export {
+  getImageSource,
+  groupArrayByMultiple,
+  truncateString,
+  greeting,
+  filterArrayContain,
+  filterArray,
+};
