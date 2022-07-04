@@ -68,6 +68,7 @@ const VehicleForm: FC<VehicleFormProps> = ({
         registrationNumber: 'Harus diisi.',
         year: 'Harus diisi.',
       });
+      setIsValidate(false);
     }
   }, [initial]);
 
