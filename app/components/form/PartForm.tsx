@@ -336,6 +336,7 @@ const PartForm: FC<PartFormProps> = ({
                 ...styles.dropdownImage,
                 marginBottom: openImage ? 200 : 10,
               }}
+              listMode="SCROLLVIEW"
               labelStyle={styles.labelImage}
               placeholderStyle={styles.placeholderImage}
               placeholder={'Pilih gambar'}
