@@ -13,7 +13,11 @@ import {ServiceScreenProps} from './interface';
 const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
   return (
     <SecondBackground>
-      <SecondHeader title={'Servis'} navigation={navigation} />
+      <SecondHeader
+        title={'Servis'}
+        navigation={navigation}
+        titleColor={color.white}
+      />
     </SecondBackground>
   );
 };

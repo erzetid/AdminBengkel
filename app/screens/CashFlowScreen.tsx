@@ -7,12 +7,17 @@ import React, {FC} from 'react';
 import {StyleSheet} from 'react-native';
 import SecondBackground from '../components/SecondBackground';
 import SecondHeader from '../components/SecondHeader';
+import {color} from '../constant/theme';
 import {CashFlowScreenProps} from './interface';
 
 const CashFlowScreen: FC<CashFlowScreenProps> = ({navigation}) => {
   return (
     <SecondBackground>
-      <SecondHeader title="Buku Kas" navigation={navigation} />
+      <SecondHeader
+        title="Buku Kas"
+        navigation={navigation}
+        titleColor={color.white}
+      />
     </SecondBackground>
   );
 };

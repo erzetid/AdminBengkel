@@ -167,7 +167,11 @@ const NoteScreen: FC<NoteScreenProps> = ({navigation}) => {
 
   return (
     <SecondBackground>
-      <SecondHeader title="Catatan" navigation={navigation} />
+      <SecondHeader
+        title="Catatan"
+        navigation={navigation}
+        titleColor={color.white}
+      />
       <NoteList
         value={notes}
         onDelete={handleOnDelete}

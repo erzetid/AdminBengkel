@@ -60,7 +60,11 @@ const DonationScreen: FC<DonationScreenProps> = ({navigation}) => {
 
   return (
     <SecondBackground>
-      <SecondHeader title="Donasi" navigation={navigation} />
+      <SecondHeader
+        title="Donasi"
+        navigation={navigation}
+        titleColor={color.white}
+      />
       <View style={styles.content}>
         <Text style={styles.textIntro}>
           {'   '}Dengan anda berdonasi secara tidak langsung anda berkontribusi

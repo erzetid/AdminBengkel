@@ -317,7 +317,11 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
   };
   return (
     <SecondBackground>
-      <SecondHeader navigation={navigation} title={'Spare Part'} />
+      <SecondHeader
+        navigation={navigation}
+        title={'Spare Part'}
+        titleColor={color.white}
+      />
       <SearchBar
         ref={searchBarRef}
         title={'Cari nama/nomor part'}

@@ -13,7 +13,11 @@ import {ReportScreenProps} from './interface';
 const ReportScreen: FC<ReportScreenProps> = ({navigation}) => {
   return (
     <SecondBackground>
-      <SecondHeader title="Laporan" navigation={navigation} />
+      <SecondHeader
+        title="Laporan"
+        navigation={navigation}
+        titleColor={color.white}
+      />
     </SecondBackground>
   );
 };

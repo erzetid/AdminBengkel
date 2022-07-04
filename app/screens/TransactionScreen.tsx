@@ -7,12 +7,17 @@ import React, {FC} from 'react';
 import {StyleSheet} from 'react-native';
 import SecondBackground from '../components/SecondBackground';
 import SecondHeader from '../components/SecondHeader';
+import {color} from '../constant/theme';
 import {TransactionScreenProps} from './interface';
 
 const TransactionScreen: FC<TransactionScreenProps> = ({navigation}) => {
   return (
     <SecondBackground>
-      <SecondHeader title="Transaksi" navigation={navigation} />
+      <SecondHeader
+        title="Transaksi"
+        navigation={navigation}
+        titleColor={color.white}
+      />
     </SecondBackground>
   );
 };

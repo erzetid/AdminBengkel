@@ -220,7 +220,11 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
   );
   return (
     <SecondBackground>
-      <SecondHeader title="Kendaraan" navigation={navigation} />
+      <SecondHeader
+        title="Kendaraan"
+        navigation={navigation}
+        titleColor={color.white}
+      />
       {searchBarElement}
       <View style={styles.content}>
         <VehicleList
