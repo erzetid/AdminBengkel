@@ -12,6 +12,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import {BackHandler} from 'react-native';
 import AlertCustom, {emptyAlert} from '../components/AlertCustom';
 import CustomerDetail from '../components/customer/CustomerDetail';
 import CustomerList from '../components/customer/CustomerList';
@@ -60,20 +61,21 @@ const CustomerScreen: FC<CustomerScreenProps> = ({navigation}) => {
     init();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    const backAction = () => {
+      customerDetailModalRef.current && customerDetailModalRef.current.close();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
   const hideAlert = useCallback(() => {
     setOptionAlert({...optionAlertRef.current, show: false, progress: false});
-  }, []);
-
-  const loadAlert = useCallback((message: string = 'Mohon tunggu...') => {
-    setOptionAlert({
-      ...optionAlertRef.current,
-      progress: true,
-      show: true,
-      title: message,
-      message: '',
-      buttonCancelShow: false,
-      buttonConfirmShow: false,
-    });
   }, []);
 
   const confirmAlert = useCallback(
@@ -155,7 +157,6 @@ const CustomerScreen: FC<CustomerScreenProps> = ({navigation}) => {
 
   const handleOnDelete = useCallback(
     async (c: ICustomer) => {
-      loadAlert();
       try {
         const deleting = await customerService.delete(c.id!);
         if (deleting.status === ResultStatus.SUCCESS) {
@@ -167,7 +168,7 @@ const CustomerScreen: FC<CustomerScreenProps> = ({navigation}) => {
         statusAlert('Ada Kesalahan', ResultStatus.ERROR);
       }
     },
-    [customerService, getCustomers, loadAlert, statusAlert],
+    [customerService, getCustomers, statusAlert],
   );
 
   const handleOnPressDelete = useCallback(
@@ -187,7 +188,6 @@ const CustomerScreen: FC<CustomerScreenProps> = ({navigation}) => {
 
   const handleOnSave = useCallback(
     async (c: ICustomer) => {
-      loadAlert();
       try {
         const saving = await customerService.create(c);
         if (saving.status === ResultStatus.SUCCESS) {
@@ -199,11 +199,10 @@ const CustomerScreen: FC<CustomerScreenProps> = ({navigation}) => {
         statusAlert('Ada Kesalahan', ResultStatus.ERROR);
       }
     },
-    [customerService, getCustomers, loadAlert, statusAlert],
+    [customerService, getCustomers, statusAlert],
   );
   const handleOnEdit = useCallback(
     async (c: ICustomer) => {
-      loadAlert();
       try {
         const updating = await customerService.update(c.id!, c);
         if (updating.status === ResultStatus.SUCCESS) {
@@ -216,7 +215,7 @@ const CustomerScreen: FC<CustomerScreenProps> = ({navigation}) => {
         statusAlert('Ada Kesalahan', ResultStatus.ERROR);
       }
     },
-    [customerService, getCustomers, loadAlert, statusAlert],
+    [customerService, getCustomers, statusAlert],
   );
 
   const searchingCustomers = useCallback((text: string) => {

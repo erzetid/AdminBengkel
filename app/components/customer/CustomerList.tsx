@@ -34,11 +34,13 @@ const CustomerList: FC<CustomerListProps> = ({data, onPressCustomer}) => {
               <Image source={ICON.customer} style={styles.image} />
             </View>
             <View style={styles.textContent}>
+              <Text style={{...styles.textPhone, color: color.yellow}}>
+                {item.no}
+              </Text>
               <Text style={styles.textName}>
                 {truncateString(item.name, 23)}
               </Text>
-              <Text style={styles.textName}>{item.no}</Text>
-              <Text style={styles.textPhone}>{item.phone}</Text>
+              <Text style={styles.textPhone}>+62{item.phone}</Text>
               <Text style={styles.textAddress}>
                 {truncateString(item.address, 50)}
               </Text>
