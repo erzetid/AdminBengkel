@@ -20,7 +20,6 @@ interface PartFormProps {
   onCancel: () => void;
   onSave: (part: PartDetail) => void;
 }
-DropDownPicker.setListMode('SCROLLVIEW');
 
 const PartForm: FC<PartFormProps> = ({
   visible,
@@ -210,6 +209,7 @@ const PartForm: FC<PartFormProps> = ({
               style={styles.dropdownCategory}
               labelStyle={styles.labelCategory}
               placeholderStyle={styles.placeholderCategory}
+              listMode="SCROLLVIEW"
             />
             <Text style={styles.dropdownCategoryText}>Kategori</Text>
           </View>
