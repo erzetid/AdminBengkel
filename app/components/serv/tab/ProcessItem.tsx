@@ -51,9 +51,10 @@ const ProcessItem: FC<ItemProps> = ({onPressItem, workOrder}) => {
     <ItemTab onPressItem={onPressItem} workOrder={workOrder}>
       <Text style={styles.textRegular}>Sisa waktu</Text>
       <View style={styles.countDown}>
-        <Icon name="ios-alarm" color={color.white} />
+        <Icon name="ios-alarm-outline" color={color.white} />
         <Text style={styles.textEstimate}>
-          {countDown > 0 ? `${minutes}:${seconds}` : 'Waktu Habis'}
+          {' '}
+          {countDown > 0 ? `${minutes}:${seconds}` : 'waktu habis'}
         </Text>
       </View>
     </ItemTab>

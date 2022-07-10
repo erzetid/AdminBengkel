@@ -18,6 +18,16 @@ export interface IServ {
   time?: number;
 }
 
+export const emptyServ: IServ = {
+  name: '',
+  code: '',
+  price: 0,
+  processTime: 0,
+  description: '',
+  category: CategoryServ.REGULAR,
+  time: 0,
+};
+
 export interface IWorkOrder {
   id?: string;
   queue: string;

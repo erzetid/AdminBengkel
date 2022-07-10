@@ -16,7 +16,8 @@ const DoneItem: FC<ItemProps> = ({onPressItem, workOrder}) => {
     <ItemTab onPressItem={onPressItem} workOrder={workOrder}>
       <Text style={styles.textRegular}>Selesai</Text>
       <Text style={styles.textEstimate}>
-        {formatDate(doneTime, 'dd LLL yyyy HH:mm', {
+        Pukul{' '}
+        {formatDate(doneTime, 'HH:mm', {
           locale: id,
         })}
       </Text>
@@ -28,12 +29,11 @@ export default DoneItem;
 
 const styles = StyleSheet.create({
   textEstimate: {
-    borderColor: color.green,
-    borderWidth: 1,
     paddingHorizontal: 3,
-    borderRadius: 5,
-    color: color.green,
+    borderRadius: 50,
+    color: color.white,
     fontSize: 12,
+    backgroundColor: color.green,
   },
   textRegular: {color: color.darkGray},
 });

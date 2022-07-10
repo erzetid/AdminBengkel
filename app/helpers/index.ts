@@ -55,6 +55,19 @@ function filterArray<ID, T extends {id: ID}>(arr: T[], ids: ID[]): T[] {
   return arr.filter(t => ids.indexOf(t.id) > -1);
 }
 
+function generateServCode() {
+  const length = 9;
+  let result = '';
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  const final = `ab-${result}`;
+  return final;
+}
+
 export {
   getImageSource,
   groupArrayByMultiple,
@@ -62,4 +75,5 @@ export {
   greeting,
   filterArrayContain,
   filterArray,
+  generateServCode,
 };
