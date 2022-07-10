@@ -56,13 +56,14 @@ const ServForm: FC<ServFormProps> = ({
         setIsValidate(true);
       }
     });
-    if (serv?.code === '') {
+    if (serv?.code === '' && tileText === 'Edit Jasa Servis') {
       setIsValidate(false);
     }
-  }, [error, serv]);
+  }, [error, serv, tileText]);
   useEffect(() => validation(), [validation]);
   useEffect(() => {
     setServ(data);
+    setValueCategory(data.category);
   }, [data]);
 
   const handleOnSave = useCallback(() => {
@@ -159,7 +160,7 @@ const ServForm: FC<ServFormProps> = ({
             onBlur={validation}
           />
           <OutlinedTextField
-            label={'Waktu Pengerjaan'}
+            label={'Waktu (menit)'}
             value={serv?.processTime.toString()}
             tintColor={color.lightPurple}
             textColor={color.darkGray}
