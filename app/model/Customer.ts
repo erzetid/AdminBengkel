@@ -11,7 +11,7 @@ export interface ICustomer {
   name: string;
   phone: string;
   address: string;
-  vehicle: IVehicle[];
+  vehicle?: IVehicle[];
   time?: number;
 }
 

@@ -146,7 +146,6 @@ const CustomerDetail = forwardRef<BottomSheetModal, CustomerDetailProps>(
         });
         if (update.status === ResultStatus.SUCCESS) {
           const _customerVehicle = [...customerVehicle];
-          console.log(_customerVehicle);
           const i = _customerVehicle.indexOf(v);
           if (i > -1) {
             if (update.data) {

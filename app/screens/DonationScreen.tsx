@@ -24,7 +24,6 @@ const DonationScreen: FC<DonationScreenProps> = ({navigation}) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    console.log('init');
     rewarded = RewardedAd.createForAdRequest(adUnitId, {
       requestNonPersonalizedAdsOnly: true,
     });

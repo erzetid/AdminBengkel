@@ -158,7 +158,7 @@ const PartForm: FC<PartFormProps> = ({
     }
   }, [isVisible, item]);
 
-  const validation = () => {
+  const validation = useCallback(() => {
     const obj: any = {
       code,
       category: valueCategory ? valueCategory : Category.FRAME,
@@ -182,12 +182,27 @@ const PartForm: FC<PartFormProps> = ({
       }
     }
     setError(_error);
-  };
+  }, [
+    buyPrice,
+    code,
+    description,
+    error,
+    location,
+    name,
+    price,
+    quantity,
+    time,
+    valueCategory,
+    valueImage,
+  ]);
 
-  const onChangeText = (callback: () => void) => {
-    validation();
-    callback();
-  };
+  const onChangeText = useCallback(
+    (callback: () => void) => {
+      validation();
+      callback();
+    },
+    [validation],
+  );
 
   return (
     <Form

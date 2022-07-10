@@ -23,10 +23,13 @@ const BottomSheetDetail = forwardRef<BottomSheetModal, BottomSheetDetailProps>(
       () => setEditFormShow(false),
       [setEditFormShow],
     );
-    const handleOpen = () => setEditFormShow(true);
-    const onPressDelete = () => {
+    const handleOpen = useCallback(
+      () => setEditFormShow(true),
+      [setEditFormShow],
+    );
+    const onPressDelete = useCallback(() => {
       onDelete(detail!);
-    };
+    }, [onDelete, detail]);
 
     const handleSave = useCallback(
       (part: PartDetail) => {

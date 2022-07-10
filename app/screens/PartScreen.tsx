@@ -193,23 +193,26 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
     setStock(value.quantity);
   }, []);
 
-  const handleSaveStock = async (id: string) => {
-    loadAlert();
-    try {
-      const updating = await partService.update(id, {
-        ...stockModalValue!,
-        quantity: stock,
-        time: Date.now(),
-      });
-      statusAlert(updating.message, updating.status);
-      if (updating.status === ResultStatus.SUCCESS) {
-        await getParts();
-        stockModalRef.current?.dismiss();
+  const handleSaveStock = useCallback(
+    async (id: string) => {
+      loadAlert();
+      try {
+        const updating = await partService.update(id, {
+          ...stockModalValue!,
+          quantity: stock,
+          time: Date.now(),
+        });
+        statusAlert(updating.message, updating.status);
+        if (updating.status === ResultStatus.SUCCESS) {
+          await getParts();
+          stockModalRef.current?.dismiss();
+        }
+      } catch (error) {
+        statusAlert('Ada Kesalahan', ResultStatus.ERROR);
       }
-    } catch (error) {
-      statusAlert('Ada Kesalahan', ResultStatus.ERROR);
-    }
-  };
+    },
+    [getParts, loadAlert, partService, statusAlert, stock, stockModalValue],
+  );
 
   const formPartValidation = useCallback((obj: any): boolean => {
     for (const key in obj) {
@@ -222,25 +225,28 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
     return true;
   }, []);
 
-  const handleSavePart = async (part: PartDetail) => {
-    if (!formPartValidation(part)) {
-      statusAlert('Mohon isi data part dengan benar', ResultStatus.FAILED);
-      return;
-    }
-    loadAlert();
-
-    try {
-      const saving = await partService.create(part);
-      statusAlert(saving.message, saving.status);
-
-      if (saving.status === ResultStatus.SUCCESS) {
-        setShowAddPartForm(false);
-        await getParts();
+  const handleSavePart = useCallback(
+    async (part: PartDetail) => {
+      if (!formPartValidation(part)) {
+        statusAlert('Mohon isi data part dengan benar', ResultStatus.FAILED);
+        return;
       }
-    } catch (error) {
-      statusAlert('Ada Kesalahan', ResultStatus.ERROR);
-    }
-  };
+      loadAlert();
+
+      try {
+        const saving = await partService.create(part);
+        statusAlert(saving.message, saving.status);
+
+        if (saving.status === ResultStatus.SUCCESS) {
+          setShowAddPartForm(false);
+          await getParts();
+        }
+      } catch (error) {
+        statusAlert('Ada Kesalahan', ResultStatus.ERROR);
+      }
+    },
+    [formPartValidation, getParts, loadAlert, partService, statusAlert],
+  );
 
   const handleUpdatePart = useCallback(
     async (part: PartDetail) => {
@@ -312,9 +318,9 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
     setParts(result || []);
   }, []);
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     searchingParts(searchBarText.current);
-  };
+  }, [searchingParts]);
   return (
     <SecondBackground>
       <SecondHeader
