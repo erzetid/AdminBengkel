@@ -146,13 +146,22 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
     [hideAlert],
   );
 
+  const getWorkOrder = useCallback((wos: IWorkOrder[]) => {
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth();
+    const day = new Date().getDate();
+    const today = new Date(year, month, day).getTime();
+    const endOfDay = today + 86400000;
+    return wos.filter(x => x.time >= today && x.time <= endOfDay);
+  }, []);
+
   const getServs = useCallback(async () => {
     const _servs = await servService.getAll();
     const _workOrders = await workOrderServices.getAll();
     servsRef.current = _servs;
     setServs(_servs);
-    setWorkOrders(_workOrders);
-  }, [servService, workOrderServices]);
+    setWorkOrders(getWorkOrder(_workOrders));
+  }, [getWorkOrder, servService, workOrderServices]);
 
   const handleOnAddServ = useCallback(() => {
     setTitleForm('Pendaftaran Servis');
