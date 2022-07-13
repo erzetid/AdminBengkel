@@ -68,6 +68,18 @@ function generateServCode() {
   return final;
 }
 
+function generateQueue(lastQueue: number): string {
+  let queue = '';
+  if (lastQueue < 9) {
+    queue = `S00${lastQueue + 1}`;
+  } else if (lastQueue > 8) {
+    queue = `S0${lastQueue + 1}`;
+  } else {
+    queue = `S0${lastQueue + 1}`;
+  }
+  return queue;
+}
+
 export {
   getImageSource,
   groupArrayByMultiple,
@@ -76,4 +88,5 @@ export {
   filterArrayContain,
   filterArray,
   generateServCode,
+  generateQueue,
 };
