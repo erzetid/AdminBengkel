@@ -19,11 +19,18 @@ export enum Category {
   ENGINE = 'engine',
   FRAME = 'frame',
 }
+
 export enum CategoryServ {
   LIGHT_REPAIR = 'lr',
   REGULAR = 'regular',
   HEAVY_REPAIR = 'hr',
   OIL_REPLACEMENT = 'or',
+}
+
+export enum ServStatus {
+  QUEUE = 'queue',
+  PROGRESS = 'progress',
+  DONE = 'done',
 }
 
 export enum ImagePart {

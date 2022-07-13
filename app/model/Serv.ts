@@ -2,7 +2,7 @@
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
-import {CategoryServ} from '../constant/enum';
+import {CategoryServ, ServStatus} from '../constant/enum';
 import {PartDetail} from '../screens/interface';
 import {ICustomer} from './Customer';
 import {IVehicle} from './Vehicle';
@@ -34,6 +34,7 @@ export interface IWorkOrder {
   time: number;
   vehicle: IVehicle;
   customer: ICustomer;
+  kilometer: number;
   serv: IServ[];
   part: PartDetail[];
   complaint: string;
@@ -41,4 +42,5 @@ export interface IWorkOrder {
   mechanic: string;
   startTime: number;
   doneTime: number;
+  status: ServStatus;
 }
