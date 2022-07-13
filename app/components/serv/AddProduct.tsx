@@ -2,7 +2,7 @@
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {formatNumber} from 'react-native-currency-input';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -30,7 +30,6 @@ const AddProduct: FC<AddProductProps> = ({
   parts,
   servs,
 }) => {
-  const partsRef = useRef<PartDetail[]>([]);
   const [openProductType, setOpenProductType] = useState(false);
   const [valueProductType, setValueProductType] = useState('');
   const [productTypeItems, setProductTypeItems] = useState<IDropdown[]>([
@@ -46,7 +45,6 @@ const AddProduct: FC<AddProductProps> = ({
   const [servsItems, setServsItems] = useState<IDropdown[]>([]);
 
   useEffect(() => {
-    partsRef.current = parts;
     setPartsItems(
       parts.map(c => {
         const label = `${c.name} - ${c.code} (${formatNumber(c.price, {
@@ -77,19 +75,6 @@ const AddProduct: FC<AddProductProps> = ({
       setValueProductType('');
       setValueParts('');
       setValueServs('');
-      const _parts = partsRef.current.filter(s => s.id !== valueParts);
-      partsRef.current = _parts;
-      setPartsItems(
-        _parts.map(c => {
-          const label = `${c.name} - ${c.code} (${formatNumber(c.price, {
-            prefix: 'Rp',
-            delimiter: ',',
-            signPosition: 'beforePrefix',
-          })})`;
-          const value = c.id!;
-          return {label, value};
-        }),
-      );
     }
   };
 

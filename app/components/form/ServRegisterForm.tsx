@@ -10,14 +10,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {formatNumber} from 'react-native-currency-input';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {OutlinedTextField} from 'rn-material-ui-textfield';
@@ -29,7 +22,7 @@ import {ICustomer} from '../../model/Customer';
 import {IServ, IWorkOrder} from '../../model/Serv';
 import {IVehicle} from '../../model/Vehicle';
 import {PartDetail} from '../../screens/interface';
-import AddProduct from '../serv/AddProduct';
+import Products, {IProduct} from '../serv/Products';
 import Form from './Form';
 
 interface ServRegisterForm {
@@ -113,8 +106,6 @@ const ServRegisterForm: FC<ServRegisterForm> = ({
   const [openVehicle, setOpenVehicle] = useState(false);
   const [valueVehicle, setValueVehicle] = useState('');
   const [vehicleItems, setVehicleItems] = useState<IDropdown[]>([]);
-
-  const [visibleProduct, setVisibleProduct] = useState(false);
 
   const [products, setProducts] = useState<{s: IServ[]; p: PartDetail[]}>({
     s: [],
@@ -250,77 +241,10 @@ const ServRegisterForm: FC<ServRegisterForm> = ({
     const _workOrder = {...workOrder};
     setWorkOrder({..._workOrder, [field]: text});
   };
-  const openAddProduct = useCallback(() => {
-    setVisibleProduct(true);
+
+  const handleGetProducts = useCallback((p: IProduct) => {
+    setProducts(p);
   }, []);
-  const closeAddProduct = useCallback(() => {
-    setVisibleProduct(false);
-  }, []);
-
-  const handleOnAddProduct = useCallback(
-    (servId: string, partId: string, productType) => {
-      const _products = {...products};
-      if (productType === '1' && servId) {
-        const serv = servs.filter(s => s.id === servId);
-        serv.length && _products.s.push(serv[0]);
-        setProducts(_products);
-        closeAddProduct();
-        return true;
-      }
-      if (productType === '2' && partId) {
-        const part = parts.current.filter(s => s.id === partId);
-        const _parts = parts.current.filter(s => s.id !== partId);
-        if (part.length) {
-          const _part = {...part[0], quantity: 1};
-          _products.p.push(_part);
-          parts.current = _parts;
-        }
-        setProducts(_products);
-        closeAddProduct();
-        return true;
-      }
-      return false;
-    },
-    [closeAddProduct, products, servs],
-  );
-
-  const handleDeleteServProduct = useCallback(
-    (id: string) => {
-      const _products = {...products};
-      const s = _products.s.filter(x => x.id !== id);
-      setProducts({..._products, s});
-    },
-    [products],
-  );
-
-  const handleDeletePartProduct = useCallback(
-    (id: string) => {
-      const _products = {...products};
-      const _parts = [...parts.current];
-
-      const p = _products.p.filter(x => x.id !== id);
-      const part = _products.p.filter(x => x.id === id);
-      if (part.length) {
-        _parts.push(part[0]);
-        parts.current = _parts;
-        setProducts({..._products, p});
-      }
-    },
-    [products],
-  );
-
-  const handleOnChangeQty = useCallback(
-    (text: string, id: string) => {
-      const _products = {...products};
-      const part = _products.p.filter(s => s.id === id);
-      if (part.length) {
-        const index = _products.p.indexOf(part[0]);
-        _products.p[index] = {...part[0], quantity: parseInt(text, 10) || 0};
-        setProducts(_products);
-      }
-    },
-    [products],
-  );
 
   const WithoutData = (
     <View>
@@ -485,105 +409,12 @@ const ServRegisterForm: FC<ServRegisterForm> = ({
           />
         </View>
         <View />
-        <TouchableOpacity style={styles.btnAddProduct} onPress={openAddProduct}>
-          <Text style={styles.textBtnProduct}>Tambah Produk</Text>
-        </TouchableOpacity>
-        <View style={styles.productContent}>
-          <View style={styles.subProductContent}>
-            <Text style={styles.textProduct}>Estimasi Jasa</Text>
-            {products.s.map(s => (
-              <View key={s.id}>
-                <View style={styles.detailContent}>
-                  <Text style={styles.textProductTitle}>{s.name}</Text>
-                  <Text style={styles.textProductPrice}>
-                    {formatNumber(s.price, {
-                      prefix: 'Rp',
-                      delimiter: ',',
-                      signPosition: 'beforePrefix',
-                    })}
-                  </Text>
-                  <TouchableOpacity
-                    style={styles.btnDeleteService}
-                    onPress={() => handleDeleteServProduct(s.id!)}>
-                    <Text style={styles.textDeleteService}>Hapus</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ))}
-            <Text style={styles.textAmount}>
-              {formatNumber(
-                products.s.reduce((a, b) => a + b.price, 0),
-                {
-                  prefix: 'Rp',
-                  delimiter: ',',
-                  signPosition: 'beforePrefix',
-                },
-              )}
-            </Text>
-          </View>
+        <Products
+          parts={parts.current}
+          servs={servs}
+          getProducts={handleGetProducts}
+        />
 
-          <View style={styles.subProductContent}>
-            <Text style={styles.textProduct}>Estimasi Sparepart</Text>
-            {products.p.map(x => (
-              <View style={styles.detailContent} key={x.id}>
-                <View>
-                  <Text style={styles.textProductTitle}>{x.name}</Text>
-                  <Text style={styles.textProductTitle}>{x.code}</Text>
-                </View>
-                <Text style={styles.textProductPrice}>
-                  {formatNumber(x.price, {
-                    prefix: 'Rp',
-                    delimiter: ',',
-                    signPosition: 'beforePrefix',
-                  })}
-                </Text>
-                <Text style={styles.textProductPrice}>X</Text>
-                <TextInput
-                  style={styles.inputPartQty}
-                  maxLength={2}
-                  keyboardType="number-pad"
-                  value={x.quantity.toString()}
-                  onBlur={() => {
-                    if (x.quantity < 1) {
-                      handleOnChangeQty('1', x.id!);
-                    }
-                  }}
-                  onChangeText={text => handleOnChangeQty(text, x.id!)}
-                />
-                <TouchableOpacity
-                  style={styles.btnDeleteService}
-                  onPress={() => handleDeletePartProduct(x.id!)}>
-                  <Text style={styles.textDeleteService}>Hapus</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-
-            <Text style={styles.textAmount}>
-              {formatNumber(
-                products.p.reduce((a, b) => a + b.price * b.quantity, 0),
-                {
-                  prefix: 'Rp',
-                  delimiter: ',',
-                  signPosition: 'beforePrefix',
-                },
-              )}
-            </Text>
-          </View>
-          <View style={styles.totalContent}>
-            <Text style={styles.textTotal}>Total</Text>
-            <Text style={styles.textTotal}>
-              {formatNumber(
-                products.s.reduce((a, b) => a + b.price, 0) +
-                  products.p.reduce((a, b) => a + b.price * b.quantity, 0),
-                {
-                  prefix: 'Rp',
-                  delimiter: ',',
-                  signPosition: 'beforePrefix',
-                },
-              )}
-            </Text>
-          </View>
-        </View>
         <View style={styles.actionContent}>
           <TouchableOpacity style={styles.btnCancel} onPress={handleOnClose}>
             <Text style={{color: color.white}}>Batal</Text>
@@ -608,13 +439,6 @@ const ServRegisterForm: FC<ServRegisterForm> = ({
           </TouchableOpacity>
         </View>
       </View>
-      <AddProduct
-        onAdd={handleOnAddProduct}
-        onClose={closeAddProduct}
-        visible={visibleProduct}
-        parts={parts.current}
-        servs={servs}
-      />
     </Form>
   );
 };
