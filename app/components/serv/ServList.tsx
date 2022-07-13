@@ -29,7 +29,7 @@ const ServList: FC<ServListProps> = ({servs, onUpdate, onDelete}) => {
         <Text style={text.secondaryMediumBold}>{`${item.name}`}</Text>
         <Text style={text.secondarySmall}>
           Kode:
-          <Text style={styles.textId}>{` ${item.id}`}</Text>
+          <Text style={styles.textId}>{` ${item.code}`}</Text>
         </Text>
         <Text style={styles.textPrice}>
           {formatNumber(item.price, {
