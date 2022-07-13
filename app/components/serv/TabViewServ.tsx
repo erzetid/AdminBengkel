@@ -2,7 +2,7 @@
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
-import React, {FC, useMemo} from 'react';
+import React, {FC, useCallback, useMemo, useState} from 'react';
 import {useWindowDimensions} from 'react-native';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {color} from '../../constant/theme';
@@ -15,31 +15,56 @@ interface TabViewServProps {
   queues: IWorkOrder[];
   progresses: IWorkOrder[];
   dones: IWorkOrder[];
+  onQueue: (wo: IWorkOrder) => void;
+  onProgress: (wo: IWorkOrder) => void;
+  onDone: (wo: IWorkOrder) => void;
 }
 
-const TabViewServ: FC<TabViewServProps> = ({queues, progresses, dones}) => {
+const TabViewServ: FC<TabViewServProps> = ({
+  queues,
+  progresses,
+  dones,
+  onQueue,
+  onProgress,
+  onDone,
+}) => {
   const layout = useWindowDimensions();
 
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
     {key: 'queue', title: 'Antrean'},
     {key: 'progress', title: 'Proses'},
     {key: 'done', title: 'Selesai'},
   ]);
-  const handleOnQueue = (wo: IWorkOrder) => {
-    console.log(wo);
-  };
+  const handleOnQueue = useCallback(
+    (wo: IWorkOrder) => {
+      onQueue(wo);
+    },
+    [onQueue],
+  );
+  const handleOnProgress = useCallback(
+    (wo: IWorkOrder) => {
+      onProgress(wo);
+    },
+    [onProgress],
+  );
+  const handleOnDone = useCallback(
+    (wo: IWorkOrder) => {
+      onDone(wo);
+    },
+    [onDone],
+  );
 
   const renderScene = useMemo(
     () =>
       SceneMap({
         queue: () => <QueueTab data={queues} onPressItem={handleOnQueue} />,
         progress: () => (
-          <ProcessTab data={progresses} onPressItem={handleOnQueue} />
+          <ProcessTab data={progresses} onPressItem={handleOnProgress} />
         ),
-        done: () => <DoneTab data={dones} onPressItem={handleOnQueue} />,
+        done: () => <DoneTab data={dones} onPressItem={handleOnDone} />,
       }),
-    [dones, progresses, queues],
+    [dones, handleOnDone, handleOnProgress, handleOnQueue, progresses, queues],
   );
   const renderTabBar = (props: any) => (
     <TabBar

@@ -339,6 +339,9 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
         queues={getWorkOrders(ServStatus.QUEUE)}
         progresses={getWorkOrders(ServStatus.PROGRESS)}
         dones={getWorkOrders(ServStatus.DONE)}
+        onQueue={() => console.log('first')}
+        onProgress={() => console.log('first')}
+        onDone={() => console.log('first')}
       />
       {floatingActionMemo}
       <ServRegisterForm

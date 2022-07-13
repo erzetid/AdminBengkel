@@ -29,6 +29,7 @@ import {ICustomer} from '../../model/Customer';
 import {IServ, IWorkOrder} from '../../model/Serv';
 import {IVehicle} from '../../model/Vehicle';
 import {PartDetail} from '../../screens/interface';
+import AddProduct from '../serv/AddProduct';
 import Form from './Form';
 
 interface ServRegisterForm {
@@ -115,21 +116,6 @@ const ServRegisterForm: FC<ServRegisterForm> = ({
 
   const [visibleProduct, setVisibleProduct] = useState(false);
 
-  const [openProductType, setOpenProductType] = useState(false);
-  const [valueProductType, setValueProductType] = useState('');
-  const [productTypeItems, setProductTypeItems] = useState<IDropdown[]>([
-    {label: 'JASA SERVIS', value: '1'},
-    {label: 'SPARE PART', value: '2'},
-  ]);
-
-  const [openParts, setOpenParts] = useState(false);
-  const [valueParts, setValueParts] = useState('');
-  const [partsItems, setPartsItems] = useState<IDropdown[]>([]);
-
-  const [openServs, setOpenServs] = useState(false);
-  const [valueServs, setValueServs] = useState('');
-  const [servsItems, setServsItems] = useState<IDropdown[]>([]);
-
   const [products, setProducts] = useState<{s: IServ[]; p: PartDetail[]}>({
     s: [],
     p: [],
@@ -168,29 +154,7 @@ const ServRegisterForm: FC<ServRegisterForm> = ({
         return {label, value};
       }),
     );
-    setPartsItems(
-      _parts.map(c => {
-        const label = `${c.name} - ${c.code} (${formatNumber(c.price, {
-          prefix: 'Rp',
-          delimiter: ',',
-          signPosition: 'beforePrefix',
-        })})`;
-        const value = c.id!;
-        return {label, value};
-      }),
-    );
-    setServsItems(
-      servs.map(c => {
-        const label = `${c.name} - ${formatNumber(c.price, {
-          prefix: 'Rp',
-          delimiter: ',',
-          signPosition: 'beforePrefix',
-        })}`;
-        const value = c.id!;
-        return {label, value};
-      }),
-    );
-  }, [customersServices, partsServices, servs, vehiclesServices]);
+  }, [customersServices, partsServices, vehiclesServices]);
 
   const getCustomerAndVehicle = useCallback(async () => {
     let _customer: ICustomer = {...defaultCustomer};
@@ -291,47 +255,34 @@ const ServRegisterForm: FC<ServRegisterForm> = ({
   }, []);
   const closeAddProduct = useCallback(() => {
     setVisibleProduct(false);
-    setValueProductType('');
-    setValueParts('');
-    setValueServs('');
   }, []);
-  const handleOnAddProduct = useCallback(() => {
-    const _products = {...products};
-    if (valueProductType === '1' && valueServs) {
-      const serv = servs.filter(s => s.id === valueServs);
-      serv.length && _products.s.push(serv[0]);
-      setProducts(_products);
-      closeAddProduct();
-    }
-    if (valueProductType === '2' && valueParts) {
-      const part = parts.current.filter(s => s.id === valueParts);
-      if (part.length) {
-        const _part = {...part[0], quantity: 1};
-        _products.p.push(_part);
-        const _parts = parts.current.filter(s => s.id !== valueParts);
-        setPartsItems(
-          _parts.map(c => {
-            const label = `${c.name} - ${c.code} (${formatNumber(c.price, {
-              prefix: 'Rp',
-              delimiter: ',',
-              signPosition: 'beforePrefix',
-            })})`;
-            const value = c.id!;
-            return {label, value};
-          }),
-        );
+
+  const handleOnAddProduct = useCallback(
+    (servId: string, partId: string, productType) => {
+      const _products = {...products};
+      if (productType === '1' && servId) {
+        const serv = servs.filter(s => s.id === servId);
+        serv.length && _products.s.push(serv[0]);
+        setProducts(_products);
+        closeAddProduct();
+        return true;
       }
-      setProducts(_products);
-      closeAddProduct();
-    }
-  }, [
-    closeAddProduct,
-    products,
-    servs,
-    valueParts,
-    valueProductType,
-    valueServs,
-  ]);
+      if (productType === '2' && partId) {
+        const part = parts.current.filter(s => s.id === partId);
+        const _parts = parts.current.filter(s => s.id !== partId);
+        if (part.length) {
+          const _part = {...part[0], quantity: 1};
+          _products.p.push(_part);
+          parts.current = _parts;
+        }
+        setProducts(_products);
+        closeAddProduct();
+        return true;
+      }
+      return false;
+    },
+    [closeAddProduct, products, servs],
+  );
 
   const handleDeleteServProduct = useCallback(
     (id: string) => {
@@ -345,27 +296,17 @@ const ServRegisterForm: FC<ServRegisterForm> = ({
   const handleDeletePartProduct = useCallback(
     (id: string) => {
       const _products = {...products};
-      const _partsItems = [...partsItems];
+      const _parts = [...parts.current];
 
       const p = _products.p.filter(x => x.id !== id);
       const part = _products.p.filter(x => x.id === id);
       if (part.length) {
-        _partsItems.push({
-          label: `${part[0].name} - ${part[0].code} (${formatNumber(
-            part[0].price,
-            {
-              prefix: 'Rp',
-              delimiter: ',',
-              signPosition: 'beforePrefix',
-            },
-          )})`,
-          value: part[0].id!,
-        });
+        _parts.push(part[0]);
+        parts.current = _parts;
         setProducts({..._products, p});
-        setPartsItems(_partsItems);
       }
     },
-    [partsItems, products],
+    [products],
   );
 
   const handleOnChangeQty = useCallback(
@@ -476,56 +417,6 @@ const ServRegisterForm: FC<ServRegisterForm> = ({
           <Text style={styles.errorInput}>Kendaraan harus dipilih!</Text>
         ) : null}
       </View>
-    </View>
-  );
-  const TypePart = (
-    <View>
-      <DropDownPicker
-        open={openParts}
-        value={valueParts}
-        items={partsItems}
-        setOpen={setOpenParts}
-        setValue={setValueParts}
-        setItems={setPartsItems}
-        placeholder={'Sparepart'}
-        style={styles.dropdownCustomer}
-        labelStyle={styles.labelCustomer}
-        placeholderStyle={styles.placeholderCustomer}
-        listMode="MODAL"
-        translation={{
-          NOTHING_TO_SHOW: 'Sparepart sudah digunakan/masih kosong!',
-          SEARCH_PLACEHOLDER: 'Ketikan kode/nama part',
-        }}
-        listMessageTextStyle={{color: color.black}}
-        mode="SIMPLE"
-        searchable={true}
-      />
-      <Text style={styles.dropdownCustomerText}>Pilih Sparepart</Text>
-    </View>
-  );
-  const TypeServ = (
-    <View>
-      <DropDownPicker
-        open={openServs}
-        value={valueServs}
-        items={servsItems}
-        setOpen={setOpenServs}
-        setValue={setValueServs}
-        setItems={setServsItems}
-        placeholder={'Jasa Servis'}
-        style={styles.dropdownCustomer}
-        labelStyle={styles.labelCustomer}
-        placeholderStyle={styles.placeholderCustomer}
-        listMode="MODAL"
-        translation={{
-          NOTHING_TO_SHOW: 'Jasa Servis masih kosong!',
-          SEARCH_PLACEHOLDER: 'Ketikan kode/nama jasa',
-        }}
-        listMessageTextStyle={{color: color.black}}
-        mode="SIMPLE"
-        searchable={true}
-      />
-      <Text style={styles.dropdownCustomerText}>Pilih Jasa Servis</Text>
     </View>
   );
 
@@ -717,45 +608,13 @@ const ServRegisterForm: FC<ServRegisterForm> = ({
           </TouchableOpacity>
         </View>
       </View>
-      <Form
-        iosIcon="cart"
+      <AddProduct
+        onAdd={handleOnAddProduct}
         onClose={closeAddProduct}
         visible={visibleProduct}
-        title="Tambah Produk">
-        <View style={styles.addProductContent}>
-          <View>
-            <DropDownPicker
-              open={openProductType}
-              value={valueProductType}
-              items={productTypeItems}
-              setOpen={setOpenProductType}
-              setValue={setValueProductType}
-              setItems={setProductTypeItems}
-              placeholder={'Tipe Produk'}
-              style={styles.dropdownCustomer}
-              labelStyle={styles.labelCustomer}
-              placeholderStyle={styles.placeholderCustomer}
-              listMessageTextStyle={{color: color.black}}
-              listMode="MODAL"
-            />
-            <Text style={styles.dropdownCustomerText}>Pilih Tipe Produk</Text>
-          </View>
-          {valueProductType === '1' ? TypeServ : null}
-          {valueProductType === '2' ? TypePart : null}
-          <View style={styles.actionContent}>
-            <TouchableOpacity
-              style={styles.btnCancel}
-              onPress={closeAddProduct}>
-              <Text style={{color: color.white}}>Batal</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btnSave}
-              onPress={handleOnAddProduct}>
-              <Text style={{color: color.white}}>Tambah</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Form>
+        parts={parts.current}
+        servs={servs}
+      />
     </Form>
   );
 };
