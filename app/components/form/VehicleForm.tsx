@@ -163,8 +163,8 @@ const VehicleForm: FC<VehicleFormProps> = ({
           value={(vehicle.year && vehicle.year.toString()) || '0'}
           textColor={color.darkGray}
           maxLength={4}
-          containerStyle={styles.inputYear}
           keyboardType={'number-pad'}
+          containerStyle={styles.inputYear}
           onChangeText={t => {
             handleOnChangeText(parseInt(t, 10), 'year');
           }}
