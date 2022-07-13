@@ -69,12 +69,12 @@ const ServForm: FC<ServFormProps> = ({
   const handleOnSave = useCallback(() => {
     const _serv: IServ = {
       ...serv,
-      code: generateServCode(),
+      code: tileText === 'Edit Jasa Servis' ? serv?.code : generateServCode(),
       category: valueCategory,
       time: Date.now(),
     };
     onSave(_serv);
-  }, [onSave, serv, valueCategory]);
+  }, [onSave, serv, tileText, valueCategory]);
   const handleOnClose = useCallback(() => {
     onClose();
   }, [onClose]);
@@ -115,10 +115,11 @@ const ServForm: FC<ServFormProps> = ({
           value={serv?.name}
           tintColor={color.lightPurple}
           textColor={color.darkGray}
-          maxLength={50}
           onChangeText={text => handleOnChangeText(text, 'name')}
           error={serv?.name ? '' : 'Harus diisi!'}
           onBlur={validation}
+          maxLength={26}
+          characterRestriction={26}
         />
         {tileText === 'Edit Jasa Servis' ? (
           <OutlinedTextField
@@ -137,7 +138,8 @@ const ServForm: FC<ServFormProps> = ({
           value={serv?.description}
           tintColor={color.lightPurple}
           textColor={color.darkGray}
-          maxLength={22}
+          maxLength={50}
+          characterRestriction={50}
           onChangeText={text => handleOnChangeText(text, 'description')}
         />
         <View style={styles.twoInput}>
