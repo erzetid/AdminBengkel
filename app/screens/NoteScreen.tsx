@@ -12,7 +12,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {BackHandler, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AlertCustom, {emptyAlert} from '../components/AlertCustom';
 import NoteForm from '../components/form/NoteForm';
@@ -33,6 +33,19 @@ const NoteScreen: FC<NoteScreenProps> = ({navigation}) => {
   const [notes, setNotes] = useState<INote[]>([]);
 
   const noteService = useMemo(() => LocalDB.notes, []);
+
+  useEffect(() => {
+    const backAction = () => {
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     optionAlertRef.current = optionAlert;

@@ -13,18 +13,15 @@ const SecondHeader: FC<SecondHeaderProps> = ({
   navigation,
   title,
   titleColor,
-  btnTextColor,
 }) => {
   return (
     <View style={styles.content}>
       <TouchableOpacity
         style={styles.btnBack}
         onPress={() => navigation?.goBack()}>
-        <Icon name="ios-chevron-back-outline" />
+        <Icon name="ios-chevron-back-outline" color={color.white} />
         <Text
-          style={
-            {...styles.btnBack, color: btnTextColor} || styles.textBtnBack
-          }>
+          style={{...styles.btnBack, color: color.white} || styles.textBtnBack}>
           Kembali
         </Text>
       </TouchableOpacity>

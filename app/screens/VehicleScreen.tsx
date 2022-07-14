@@ -11,7 +11,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {StyleSheet, View} from 'react-native';
+import {BackHandler, StyleSheet, View} from 'react-native';
 import AlertCustom, {emptyAlert} from '../components/AlertCustom';
 import VehicleForm from '../components/form/VehicleForm';
 import SearchBar from '../components/SearchBar';
@@ -35,6 +35,19 @@ const VehicleScreen: FC<VehicleScreenProps> = ({navigation}) => {
   const [vehicles, setVehicles] = useState<IVehicle[]>([]);
   const [optionAlert, setOptionAlert] = useState<AwesomeAlertProps>(emptyAlert);
   const [value, setValue] = useState<IVehicle | null>(null);
+
+  useEffect(() => {
+    const backAction = () => {
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     const init = async () => {

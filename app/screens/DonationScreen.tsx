@@ -4,7 +4,14 @@
 // https://opensource.org/licenses/MIT
 
 import React, {FC, useCallback, useEffect, useState} from 'react';
-import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  BackHandler,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {
   AdEventType,
   RewardedAd,
@@ -22,6 +29,19 @@ const adUnitId = __DEV__
 let rewarded: RewardedAd;
 const DonationScreen: FC<DonationScreenProps> = ({navigation}) => {
   const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const backAction = () => {
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     rewarded = RewardedAd.createForAdRequest(adUnitId, {

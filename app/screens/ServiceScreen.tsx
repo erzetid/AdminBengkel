@@ -12,6 +12,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import {BackHandler} from 'react-native';
 import {FloatingAction} from 'react-native-floating-action';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AlertCustom, {emptyAlert} from '../components/AlertCustom';
@@ -65,6 +66,18 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
 
   const [workOrders, setWorkOrders] = useState<IWorkOrder[]>([]);
   const [visibleTabSheet, setVisibleTabSheet] = useState(false);
+  useEffect(() => {
+    const backAction = () => {
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     optionAlertRef.current = optionAlert;
