@@ -1,3 +1,4 @@
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import React, {
   FC,
   useCallback,
@@ -14,10 +15,12 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 import {BACKGROUND} from '../assets/images';
 import AlertCustom, {emptyAlert} from '../components/AlertCustom';
-import {Ads, Header, Menu} from '../components/home';
+import {Ads, Balance, Header, Menu} from '../components/home';
+import Setting from '../components/home/setting';
 import {color} from '../constant/theme';
 import {AwesomeAlertProps, HomeScreenProps} from './interface';
 
@@ -26,23 +29,31 @@ const adUnitId = __DEV__
   : 'ca-app-pub-5427566701323504/2055860036';
 const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
   const optionAlertRef = useRef<AwesomeAlertProps>(emptyAlert);
+  const settingRef = useRef<BottomSheetModal>(null);
   const [optionAlert, setOptionAlert] = useState<AwesomeAlertProps>(emptyAlert);
+  const [setRefPosition, setSetRefPosition] = useState<boolean>(false);
   const menu = useMemo(() => <Menu navigation={navigation} />, [navigation]);
 
   useEffect(() => {
     optionAlertRef.current = optionAlert;
   }, [optionAlert]);
+
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
+        if (setRefPosition) {
+          settingRef.current?.close();
+          setSetRefPosition(false);
+          return true;
+        }
         confirmAlert();
         return true;
       },
     );
     return () => backHandler.remove();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [setRefPosition]);
 
   const hideAlert = useCallback(() => {
     setOptionAlert({...optionAlertRef.current, show: false, progress: false});
@@ -64,11 +75,22 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
     });
   }, [hideAlert]);
 
+  const handleOnPressSetting = useCallback(() => {
+    settingRef.current?.present();
+    setSetRefPosition(true);
+  }, []);
+
   return (
     <SafeAreaView style={styles.screen}>
-      <ImageBackground source={BACKGROUND.secondary} style={styles.background}>
-        <View style={styles.content}>
-          <Header navigation={navigation} />
+      <ScrollView>
+        <ImageBackground
+          source={BACKGROUND.secondary}
+          style={styles.background}>
+          <View style={styles.content}>
+            <Header navigation={navigation} onPressSet={handleOnPressSetting} />
+            {menu}
+            <Balance />
+          </View>
           <Ads>
             <BannerAd
               unitId={adUnitId}
@@ -78,11 +100,10 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
               }}
             />
           </Ads>
-          {/* <Balance /> */}
-          {menu}
-        </View>
-      </ImageBackground>
+        </ImageBackground>
+      </ScrollView>
       <AlertCustom option={optionAlert} />
+      <Setting ref={settingRef} />
     </SafeAreaView>
   );
 };

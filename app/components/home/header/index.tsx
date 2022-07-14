@@ -18,9 +18,11 @@ import {color} from '../../../constant/theme';
 import {ScreenProps} from '../../../screens/interface';
 import CardButton from '../../CardButton';
 
-interface HeaderProps extends ScreenProps {}
+interface HeaderProps extends ScreenProps {
+  onPressSet: () => void;
+}
 
-const Header: FC<HeaderProps> = ({navigation}) => {
+const Header: FC<HeaderProps> = ({navigation, onPressSet}) => {
   const onPress = useCallback(
     (screen: string) => {
       navigation?.navigate(screen);
@@ -54,7 +56,6 @@ const Header: FC<HeaderProps> = ({navigation}) => {
       )),
     [onPress],
   );
-
   return (
     <SafeAreaView>
       <View style={styles.info}>
@@ -68,7 +69,7 @@ const Header: FC<HeaderProps> = ({navigation}) => {
           </Text>
         </View>
         <View style={styles.settingButton}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onPressSet}>
             <Icon name="ios-settings-outline" size={30} color={color.white} />
           </TouchableOpacity>
         </View>

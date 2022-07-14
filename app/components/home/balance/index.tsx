@@ -35,6 +35,6 @@ const Balance = () => {
 export default Balance;
 
 const styles = StyleSheet.create({
-  content: {marginTop: 10},
+  content: {marginTop: 0},
   card: {flexDirection: 'row', marginTop: 10},
 });

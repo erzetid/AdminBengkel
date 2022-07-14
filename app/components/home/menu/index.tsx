@@ -97,7 +97,7 @@ export default FeatureMenu;
 
 const styles = StyleSheet.create({
   content: {
-    marginVertical: 10,
+    marginTop: 10,
   },
   card: {
     marginVertical: 10,
