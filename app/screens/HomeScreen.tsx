@@ -85,6 +85,7 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
     } else {
       setWorkshop(ws[0]);
     }
+    // await settingsService.drop();
   }, [settingsService, workshop]);
 
   const hideAlert = useCallback(() => {
@@ -198,7 +199,6 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
     ),
     [],
   );
-
   return (
     <SafeAreaView style={styles.screen}>
       <ImageBackground source={BACKGROUND.secondary} style={styles.background}>

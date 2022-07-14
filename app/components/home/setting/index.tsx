@@ -4,37 +4,36 @@
 // https://opensource.org/licenses/MIT
 
 import {BottomSheetModal, BottomSheetScrollView} from '@gorhom/bottom-sheet';
-import React, {forwardRef, useEffect, useMemo, useState} from 'react';
+import React, {forwardRef, useEffect, useMemo, useRef} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {OutlinedTextField} from 'rn-material-ui-textfield';
 import {SPLASH} from '../../../assets/images/index';
 import {color} from '../../../constant/theme';
-import {emptyWorkshop, IWorkshop} from '../../../model/Workshop';
+import {IWorkshop} from '../../../model/Workshop';
 import BackdropBS from '../../BackdropBS';
 
 interface SettingProps {
-  workshop?: IWorkshop;
+  workshop: IWorkshop;
   onPress: (ws: IWorkshop) => void;
 }
 
 const Setting = forwardRef<BottomSheetModal, SettingProps>(
-  ({workshop = emptyWorkshop, onPress}, ref) => {
+  ({workshop, onPress}, ref) => {
     const snapPoints = useMemo(() => ['100%'], []);
-    const ws = useMemo(() => workshop, [workshop]);
-    const [wsValue, setWsValue] = useState(workshop);
+    const ws = useRef<IWorkshop>(workshop);
 
     useEffect(() => {
-      setWsValue(ws);
-    }, [ws]);
+      ws.current = workshop;
+    }, [workshop]);
 
     const handleOnChange = (text: string, field: keyof IWorkshop) => {
-      const _wsValue = {...wsValue};
-      setWsValue({..._wsValue, [field]: text});
+      const _ws = {...ws.current, [field]: text};
+      ws.current = _ws;
     };
 
     const handleOnPressUpdate = () => {
-      onPress(wsValue);
+      onPress(ws.current);
     };
 
     return (
@@ -48,7 +47,7 @@ const Setting = forwardRef<BottomSheetModal, SettingProps>(
           <View style={styles.headerContent}>
             <View style={styles.imageText}>
               <View style={styles.imageTextContent}>
-                <Text style={styles.textIdTitle}>ID : {wsValue.code}</Text>
+                <Text style={styles.textIdTitle}>ID : {ws.current.code}</Text>
                 <Text style={styles.textIdInfo}>
                   ID ini bisa digunakan di semua perangkat smartphone dan ID ini
                   berfungsi sebagai kode akses untuk mencadangkan dan memulihkan
@@ -66,45 +65,45 @@ const Setting = forwardRef<BottomSheetModal, SettingProps>(
             <Text style={styles.textInfo}>Data Bengkel</Text>
             <OutlinedTextField
               label={'Nama Bengkel'}
-              value={wsValue.name}
-              onChangeText={t => handleOnChange(t, 'name')}
+              defaultValue={ws.current.name}
               tintColor={color.lightPurple}
               textColor={color.darkGray}
               containerStyle={styles.fieldContent}
               maxLength={50}
               characterRestriction={50}
+              onChangeText={t => handleOnChange(t, 'name')}
             />
             <OutlinedTextField
               label={'Pemilik Bengkel'}
-              value={wsValue.owner}
-              onChangeText={t => handleOnChange(t, 'owner')}
+              defaultValue={ws.current.owner}
               tintColor={color.lightPurple}
               textColor={color.darkGray}
               containerStyle={styles.fieldContent}
               maxLength={35}
               characterRestriction={35}
+              onChangeText={t => handleOnChange(t, 'owner')}
             />
             <OutlinedTextField
               label={'Alamat Bengkel'}
-              value={wsValue.address}
-              onChangeText={t => handleOnChange(t, 'address')}
+              defaultValue={ws.current.address}
               tintColor={color.lightPurple}
               textColor={color.darkGray}
               containerStyle={styles.fieldContent}
               multiline={true}
-              maxLength={35}
+              maxLength={50}
               characterRestriction={50}
+              onChangeText={t => handleOnChange(t, 'address')}
             />
             <OutlinedTextField
               label={'Deskripsi Bengkel'}
-              value={wsValue.description}
-              onChangeText={t => handleOnChange(t, 'description')}
+              defaultValue={ws.current.description}
               tintColor={color.lightPurple}
               textColor={color.darkGray}
               containerStyle={styles.fieldContent}
               multiline={true}
-              maxLength={35}
-              characterRestriction={50}
+              maxLength={80}
+              characterRestriction={80}
+              onChangeText={t => handleOnChange(t, 'description')}
             />
             <TouchableOpacity
               style={styles.btnUpdate}
