@@ -49,7 +49,6 @@ const TabViewServ: FC<TabViewServProps> = ({
 }) => {
   const layout = useWindowDimensions();
   const ref = useRef<BottomSheetModal>(null);
-  const partsRef = useRef<PartDetail[]>([]);
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -59,10 +58,8 @@ const TabViewServ: FC<TabViewServProps> = ({
   ]);
   const [workOrder, setWorkOrder] = useState<IWorkOrder>();
   const [textBtn, setTextBtn] = useState('');
+  const [productPart, setProductPart] = useState<PartDetail[]>([]);
   const closeSheet = useMemo(() => visibleTabSheet, [visibleTabSheet]);
-  useEffect(() => {
-    partsRef.current = parts;
-  }, [parts]);
 
   useEffect(() => {
     if (closeSheet) {
@@ -70,10 +67,16 @@ const TabViewServ: FC<TabViewServProps> = ({
     }
   }, [closeSheet]);
 
-  const openSheet = useCallback((wo: IWorkOrder) => {
-    setWorkOrder(wo);
-    ref.current?.present();
-  }, []);
+  const openSheet = useCallback(
+    (wo: IWorkOrder) => {
+      const _parts = [...parts];
+      const _p = _parts.filter(x => wo.part.findIndex(i => i.id === x.id) < 0);
+      setProductPart(_p);
+      setWorkOrder(wo);
+      ref.current?.present();
+    },
+    [parts],
+  );
 
   const handleOnQueue = useCallback(
     (wo: IWorkOrder) => {
@@ -107,7 +110,7 @@ const TabViewServ: FC<TabViewServProps> = ({
         onChange(newWo);
         const _parts = [...parts];
         const _p = _parts.filter(x => p.p.findIndex(i => i.id === x.id) < 0);
-        partsRef.current = _p;
+        setProductPart(_p);
       }
     },
     [onChange, parts, workOrder],
@@ -150,7 +153,7 @@ const TabViewServ: FC<TabViewServProps> = ({
         onProgress={() => workOrder && onProgress(workOrder)}
         textBtn={textBtn}>
         <Products
-          parts={partsRef.current}
+          parts={productPart}
           servs={servs}
           getProducts={handleOnGetProducts}
           product={{p: workOrder?.part || [], s: workOrder?.serv || []}}
