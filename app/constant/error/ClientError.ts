@@ -1,4 +1,4 @@
-// Copyright (c) 2022 fahrizalm14
+// Copyright (c) 2022 https://www.adminbengkel.my.id
 
 export default class ClientError extends Error {
   statusCode: number;

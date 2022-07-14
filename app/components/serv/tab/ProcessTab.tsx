@@ -1,4 +1,4 @@
-// Copyright (c) 2022 fahrizalm14
+// Copyright (c) 2022 https://www.adminbengkel.my.id
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -38,4 +38,4 @@ const ProcessTab: FC<ProcessTabProps> = ({onPressItem, data}) => {
 
 export default ProcessTab;
 
-const styles = StyleSheet.create({content: {flex: 1,}});
+const styles = StyleSheet.create({content: {flex: 1}});
