@@ -55,8 +55,7 @@ function filterArray<ID, T extends {id: ID}>(arr: T[], ids: ID[]): T[] {
   return arr.filter(t => ids.indexOf(t.id) > -1);
 }
 
-function generateServCode() {
-  const length = 9;
+function generateCode(length: number) {
   let result = '';
   const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -64,6 +63,11 @@ function generateServCode() {
   for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
+  return result;
+}
+
+function generateServCode() {
+  const result = generateCode(9);
   const final = `ab-${result}`;
   return final;
 }
@@ -89,4 +93,5 @@ export {
   filterArray,
   generateServCode,
   generateQueue,
+  generateCode,
 };

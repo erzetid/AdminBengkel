@@ -15,14 +15,17 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {ICON} from '../../../assets/icon/index';
 import {text} from '../../../constant/styles';
 import {color} from '../../../constant/theme';
+import {truncateString} from '../../../helpers';
+import {IWorkshop} from '../../../model/Workshop';
 import {ScreenProps} from '../../../screens/interface';
 import CardButton from '../../CardButton';
 
 interface HeaderProps extends ScreenProps {
   onPressSet: () => void;
+  workshop: IWorkshop;
 }
 
-const Header: FC<HeaderProps> = ({navigation, onPressSet}) => {
+const Header: FC<HeaderProps> = ({navigation, workshop, onPressSet}) => {
   const onPress = useCallback(
     (screen: string) => {
       navigation?.navigate(screen);
@@ -62,10 +65,10 @@ const Header: FC<HeaderProps> = ({navigation, onPressSet}) => {
         <View>
           {/* eslint-disable-next-line react-native/no-inline-styles */}
           <Text style={{fontSize: 22, color: color.lightGray}}>
-            Bengkel Cometor
+            {truncateString(workshop.name, 20)}
           </Text>
           <Text style={text.primarySmall}>
-            {'Menyawak, mau profit berapa hari ini? '}
+            {workshop.owner}, mau profit berapa hari ini?
           </Text>
         </View>
         <View style={styles.settingButton}>
