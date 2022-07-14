@@ -201,10 +201,8 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <ScrollView>
-        <ImageBackground
-          source={BACKGROUND.secondary}
-          style={styles.background}>
+      <ImageBackground source={BACKGROUND.secondary} style={styles.background}>
+        <ScrollView>
           <View style={styles.content}>
             <Header
               navigation={navigation}
@@ -215,8 +213,8 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
             <Balance />
           </View>
           {adsMemo}
-        </ImageBackground>
-      </ScrollView>
+        </ScrollView>
+      </ImageBackground>
       <AlertCustom option={optionAlert} />
       <Setting
         ref={settingRef}

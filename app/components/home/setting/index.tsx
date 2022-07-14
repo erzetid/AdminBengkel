@@ -8,7 +8,7 @@ import React, {forwardRef, useEffect, useMemo, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {OutlinedTextField} from 'rn-material-ui-textfield';
-import {ICON} from '../../../assets/icon/index';
+import {SPLASH} from '../../../assets/images/index';
 import {color} from '../../../constant/theme';
 import {emptyWorkshop, IWorkshop} from '../../../model/Workshop';
 import BackdropBS from '../../BackdropBS';
@@ -59,7 +59,7 @@ const Setting = forwardRef<BottomSheetModal, SettingProps>(
                   </Text>
                 </Text>
               </View>
-              <Image source={ICON.moto} style={styles.imageLogo} />
+              <Image source={SPLASH.logo} style={styles.imageLogo} />
             </View>
           </View>
           <View>
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
   },
-  textIdInfo: {color: color.darkGray, fontSize: 12, textAlign: 'justify'},
+  textIdInfo: {color: color.darkGray, fontSize: 12, textAlign: 'center'},
   textIdInfoWarn: {color: color.red},
   textInfo: {marginTop: 10, fontSize: 16, color: color.black},
   fieldContent: {marginTop: 10},
