@@ -25,7 +25,7 @@ import {ResultStatus, ServStatus} from '../constant/enum';
 import {color} from '../constant/theme';
 import LocalDB from '../database';
 import {emptyServ, IServ, IWorkOrder} from '../model/Serv';
-import {AwesomeAlertProps, ServiceScreenProps} from './interface';
+import {AwesomeAlertProps, PartDetail, ServiceScreenProps} from './interface';
 
 const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
   const actions = useMemo(
@@ -49,6 +49,7 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
   );
   const workOrderServices = useMemo(() => LocalDB.workOrders, []);
   const servService = useMemo(() => LocalDB.servs, []);
+  const partService = useMemo(() => LocalDB.parts, []);
   const servSheetRef = useRef<BottomSheetModal>(null);
   const optionAlertRef = useRef<AwesomeAlertProps>(emptyAlert);
   const servsRef = useRef<IServ[]>([]);
@@ -57,11 +58,13 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
   const [titleForm, setTitleForm] = useState<string>('');
   const [titleServForm, setTitleServForm] = useState('');
   const [servs, setServs] = useState<IServ[]>([]);
+  const [parts, setParts] = useState<PartDetail[]>([]);
   const [serv, setServ] = useState(emptyServ);
   const [optionAlert, setOptionAlert] = useState<AwesomeAlertProps>(emptyAlert);
   const [visibleServ, setVisibleServ] = useState(false);
 
   const [workOrders, setWorkOrders] = useState<IWorkOrder[]>([]);
+  const [visibleTabSheet, setVisibleTabSheet] = useState(false);
 
   useEffect(() => {
     optionAlertRef.current = optionAlert;
@@ -157,11 +160,13 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
 
   const getServs = useCallback(async () => {
     const _servs = await servService.getAll();
+    const _parts = await partService.getAll();
     const _workOrders = await workOrderServices.getAll();
     servsRef.current = _servs;
     setServs(_servs);
+    setParts(_parts);
     setWorkOrders(getWorkOrder(_workOrders));
-  }, [getWorkOrder, servService, workOrderServices]);
+  }, [getWorkOrder, partService, servService, workOrderServices]);
 
   const handleOnAddServ = useCallback(() => {
     setTitleForm('Pendaftaran Servis');
@@ -178,10 +183,10 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
       loadAlert();
       try {
         const saving = await workOrderServices.create(wo);
-        statusAlert(saving.message, saving.status);
         if (saving.status === ResultStatus.SUCCESS) {
           await getServs();
           setVisibleFormServ(false);
+          statusAlert(saving.message, saving.status);
           return true;
         }
       } catch (error) {
@@ -190,6 +195,59 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
       return false;
     },
     [getServs, loadAlert, statusAlert, workOrderServices],
+  );
+
+  const handleOnChangeProducts = useCallback(
+    async (wo: IWorkOrder) => {
+      try {
+        const updating = await workOrderServices.update(wo.id!, wo);
+        if (updating.status === ResultStatus.SUCCESS) {
+          await getServs();
+        }
+      } catch (error) {}
+    },
+    [getServs, workOrderServices],
+  );
+
+  const queueToProgress = useCallback(
+    async (wo: IWorkOrder) => {
+      loadAlert();
+      try {
+        const updating = await workOrderServices.update(wo.id!, {
+          ...wo,
+          status: ServStatus.PROGRESS,
+          startTime: Date.now(),
+        });
+        if (updating.status === ResultStatus.SUCCESS) {
+          statusAlert('', updating.status);
+          await getServs();
+          setVisibleFormServ(false);
+          setVisibleTabSheet(true);
+        }
+      } catch (error) {
+        statusAlert('Ada Kesalahan', ResultStatus.ERROR);
+      }
+    },
+    [getServs, loadAlert, statusAlert, workOrderServices],
+  );
+
+  const handleOnStartWorking = useCallback(
+    (wo: IWorkOrder) => {
+      setVisibleTabSheet(false);
+      confirmAlert(
+        {
+          message: `Kamu yakin akan memulai perbaikan kendaraan dengan No Plat ${wo.vehicle.plate}?`,
+        },
+
+        () => {
+          hideAlert();
+        },
+        () => {
+          queueToProgress(wo);
+        },
+      );
+    },
+    [confirmAlert, hideAlert, queueToProgress],
   );
 
   const openFormServ = useCallback(() => {
@@ -332,6 +390,52 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
     ],
   );
 
+  const tabView = useMemo(
+    () => (
+      <TabViewServ
+        queues={getWorkOrders(ServStatus.QUEUE)}
+        progresses={getWorkOrders(ServStatus.PROGRESS)}
+        dones={getWorkOrders(ServStatus.DONE)}
+        onQueue={handleOnStartWorking}
+        onProgress={() => console.log('first')}
+        onDone={() => console.log('first')}
+        onChange={handleOnChangeProducts}
+        servs={servs}
+        parts={parts}
+        visibleTabSheet={visibleTabSheet}
+      />
+    ),
+    [
+      getWorkOrders,
+      handleOnChangeProducts,
+      handleOnStartWorking,
+      parts,
+      servs,
+      visibleTabSheet,
+    ],
+  );
+
+  const servRegisterForm = useMemo(
+    () => (
+      <ServRegisterForm
+        onSave={handleOnSave}
+        onClose={handleOnCloseForm}
+        visible={visibleFormServ}
+        title={titleForm}
+        lastQueue={workOrders.length}
+        servs={servs}
+      />
+    ),
+    [
+      handleOnCloseForm,
+      handleOnSave,
+      servs,
+      titleForm,
+      visibleFormServ,
+      workOrders.length,
+    ],
+  );
+
   return (
     <SecondBackground>
       <SecondHeader
@@ -344,23 +448,10 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
         progress={getWorkOrders(ServStatus.PROGRESS).length}
         queue={getWorkOrders(ServStatus.QUEUE).length}
       />
-      <TabViewServ
-        queues={getWorkOrders(ServStatus.QUEUE)}
-        progresses={getWorkOrders(ServStatus.PROGRESS)}
-        dones={getWorkOrders(ServStatus.DONE)}
-        onQueue={() => console.log('first')}
-        onProgress={() => console.log('first')}
-        onDone={() => console.log('first')}
-      />
+      {servRegisterForm}
+      {tabView}
       {floatingActionMemo}
-      <ServRegisterForm
-        onSave={handleOnSave}
-        onClose={handleOnCloseForm}
-        visible={visibleFormServ}
-        title={titleForm}
-        lastQueue={workOrders.length}
-        servs={servs}
-      />
+
       {servSheet}
       {alertCustom}
     </SecondBackground>

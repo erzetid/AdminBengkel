@@ -2,7 +2,14 @@
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
-import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {formatNumber} from 'react-native-currency-input';
 import {TextInput} from 'react-native-gesture-handler';
@@ -19,19 +26,21 @@ interface ProductsProps {
   getProducts: (p: IProduct) => void;
   parts: PartDetail[];
   servs: IServ[];
+  product?: IProduct;
 }
 
-const Products: FC<ProductsProps> = ({getProducts, parts, servs}) => {
+const Products: FC<ProductsProps> = ({getProducts, parts, servs, product}) => {
   const partsRef = useRef<PartDetail[]>([]);
   const [products, setProducts] = useState<{s: IServ[]; p: PartDetail[]}>({
     s: [],
     p: [],
   });
   const [visibleProduct, setVisibleProduct] = useState(false);
+  const productMemo = useMemo(() => product, [product]);
 
   useEffect(() => {
-    getProducts(products);
-  }, [getProducts, products]);
+    productMemo && setProducts(productMemo);
+  }, [productMemo]);
 
   useEffect(() => {
     partsRef.current = parts;
@@ -52,6 +61,7 @@ const Products: FC<ProductsProps> = ({getProducts, parts, servs}) => {
         const serv = servs.filter(s => s.id === servId);
         serv.length && _products.s.push(serv[0]);
         setProducts(_products);
+        getProducts(_products);
         closeAddProduct();
         return true;
       }
@@ -64,12 +74,13 @@ const Products: FC<ProductsProps> = ({getProducts, parts, servs}) => {
           partsRef.current = _parts;
         }
         setProducts(_products);
+        getProducts(_products);
         closeAddProduct();
         return true;
       }
       return false;
     },
-    [closeAddProduct, products, servs],
+    [closeAddProduct, getProducts, products, servs],
   );
 
   const handleDeleteServProduct = useCallback(
@@ -77,8 +88,9 @@ const Products: FC<ProductsProps> = ({getProducts, parts, servs}) => {
       const _products = {...products};
       const s = _products.s.filter(x => x.id !== id);
       setProducts({..._products, s});
+      getProducts({..._products, s});
     },
-    [products],
+    [getProducts, products],
   );
 
   const handleDeletePartProduct = useCallback(
@@ -91,10 +103,11 @@ const Products: FC<ProductsProps> = ({getProducts, parts, servs}) => {
       if (part.length) {
         _parts.push(part[0]);
         setProducts({..._products, p});
+        getProducts({..._products, p});
         partsRef.current = _parts;
       }
     },
-    [products],
+    [getProducts, products],
   );
 
   const handleOnChangeQty = useCallback(
@@ -105,9 +118,10 @@ const Products: FC<ProductsProps> = ({getProducts, parts, servs}) => {
         const index = _products.p.indexOf(part[0]);
         _products.p[index] = {...part[0], quantity: parseInt(text, 10) || 0};
         setProducts(_products);
+        getProducts(_products);
       }
     },
-    [products],
+    [getProducts, products],
   );
 
   return (
@@ -194,6 +208,13 @@ const Products: FC<ProductsProps> = ({getProducts, parts, servs}) => {
                 signPosition: 'beforePrefix',
               },
             )}
+          </Text>
+        </View>
+        <View style={styles.subProductContent}>
+          <Text style={styles.textProduct}>Estimasi Waktu Pengerjaan</Text>
+
+          <Text style={styles.textProductTitle}>
+            {products.s.reduce((a, b) => a + b.processTime, 0)} Menit
           </Text>
         </View>
         <View style={styles.totalContent}>
