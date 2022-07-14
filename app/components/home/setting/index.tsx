@@ -4,7 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import {BottomSheetModal, BottomSheetScrollView} from '@gorhom/bottom-sheet';
-import React, {forwardRef, useEffect, useMemo, useRef} from 'react';
+import React, {forwardRef, useEffect, useMemo, useRef, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {OutlinedTextField} from 'rn-material-ui-textfield';
@@ -22,6 +22,7 @@ const Setting = forwardRef<BottomSheetModal, SettingProps>(
   ({workshop, onPress}, ref) => {
     const snapPoints = useMemo(() => ['100%'], []);
     const ws = useRef<IWorkshop>(workshop);
+    const [phoneFocus, setPhoneFocus] = useState(false);
 
     useEffect(() => {
       ws.current = workshop;
@@ -83,6 +84,29 @@ const Setting = forwardRef<BottomSheetModal, SettingProps>(
               characterRestriction={35}
               onChangeText={t => handleOnChange(t, 'owner')}
             />
+            <View style={styles.fieldContent}>
+              <Text style={styles.textPhone}>+62</Text>
+              <OutlinedTextField
+                label={'HP/Whatsapp Bengkel'}
+                defaultValue={ws.current.phone}
+                tintColor={color.lightPurple}
+                textColor={color.darkGray}
+                // eslint-disable-next-line react-native/no-inline-styles
+                inputContainerStyle={{paddingStart: 35}}
+                // eslint-disable-next-line react-native/no-inline-styles
+                labelTextStyle={{
+                  left: phoneFocus || ws.current.phone ? -30 : 0,
+                }}
+                keyboardType="number-pad"
+                onFocus={() => {
+                  setPhoneFocus(true);
+                }}
+                onBlur={() => {
+                  setPhoneFocus(false);
+                }}
+                onChangeText={text => handleOnChange(text, 'phone')}
+              />
+            </View>
             <OutlinedTextField
               label={'Alamat Bengkel'}
               defaultValue={ws.current.address}
@@ -139,6 +163,13 @@ const styles = StyleSheet.create({
   textIdInfoWarn: {color: color.red},
   textInfo: {marginTop: 10, fontSize: 16, color: color.black},
   fieldContent: {marginTop: 10},
+  textPhone: {
+    color: color.darkGray,
+    position: 'absolute',
+    left: 5,
+    top: 16,
+    fontSize: 16,
+  },
   btnUpdate: {
     backgroundColor: color.lightPurple,
     borderRadius: 5,
