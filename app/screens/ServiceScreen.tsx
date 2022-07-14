@@ -231,6 +231,28 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
     [getServs, loadAlert, statusAlert, workOrderServices],
   );
 
+  const progressToDone = useCallback(
+    async (wo: IWorkOrder) => {
+      loadAlert();
+      try {
+        const updating = await workOrderServices.update(wo.id!, {
+          ...wo,
+          status: ServStatus.DONE,
+          doneTime: Date.now(),
+        });
+        if (updating.status === ResultStatus.SUCCESS) {
+          statusAlert('', updating.status);
+          await getServs();
+          setVisibleFormServ(false);
+          setVisibleTabSheet(true);
+        }
+      } catch (error) {
+        statusAlert('Ada Kesalahan', ResultStatus.ERROR);
+      }
+    },
+    [getServs, loadAlert, statusAlert, workOrderServices],
+  );
+
   const handleOnStartWorking = useCallback(
     (wo: IWorkOrder) => {
       setVisibleTabSheet(false);
@@ -248,6 +270,25 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
       );
     },
     [confirmAlert, hideAlert, queueToProgress],
+  );
+
+  const handleOnProgress = useCallback(
+    (wo: IWorkOrder) => {
+      setVisibleTabSheet(false);
+      confirmAlert(
+        {
+          message: `Kamu yakin akan mneyelesaikan perbaikan kendaraan dengan No Plat ${wo.vehicle.plate}?`,
+        },
+
+        () => {
+          hideAlert();
+        },
+        () => {
+          progressToDone(wo);
+        },
+      );
+    },
+    [confirmAlert, hideAlert, progressToDone],
   );
 
   const openFormServ = useCallback(() => {
@@ -397,7 +438,7 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
         progresses={getWorkOrders(ServStatus.PROGRESS)}
         dones={getWorkOrders(ServStatus.DONE)}
         onQueue={handleOnStartWorking}
-        onProgress={() => console.log('first')}
+        onProgress={handleOnProgress}
         onDone={() => console.log('first')}
         onChange={handleOnChangeProducts}
         servs={servs}
@@ -408,6 +449,7 @@ const ServiceScreen: FC<ServiceScreenProps> = ({navigation}) => {
     [
       getWorkOrders,
       handleOnChangeProducts,
+      handleOnProgress,
       handleOnStartWorking,
       parts,
       servs,

@@ -86,7 +86,7 @@ const TabViewServ: FC<TabViewServProps> = ({
   const handleOnProgress = useCallback(
     (wo: IWorkOrder) => {
       openSheet(wo);
-      setTextBtn('BILLING');
+      setTextBtn('SELESAI');
     },
     [openSheet],
   );
