@@ -8,6 +8,7 @@ import {TransactionStatus, TransactionType} from '../constant/enum';
 import {ICustomer} from './Customer';
 
 export interface ITransactionBuffer {
+  id?: string;
   no: string;
   type: TransactionType;
   customer: ICustomer;
