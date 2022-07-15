@@ -12,12 +12,13 @@ import {PartDetail} from '../screens/interface';
 import Database from './DBHelper';
 
 const parts = new Database<PartDetail>('parts');
-const vehicles = new Database<IVehicle>('vehicle');
-const customers = new Database<ICustomer>('customer');
-const notes = new Database<INote>('note');
-const workOrders = new Database<IWorkOrder>('workOrder');
-const servs = new Database<IServ>('serv');
+const vehicles = new Database<IVehicle>('vehicles');
+const customers = new Database<ICustomer>('customers');
+const notes = new Database<INote>('notes');
+const workOrders = new Database<IWorkOrder>('workorders');
+const servs = new Database<IServ>('servs');
 const workshops = new Database<IWorkshop>('workshops');
+const transactions = new Database<IWorkshop>('transactions');
 
 const LocalDB = {
   parts,
@@ -27,5 +28,6 @@ const LocalDB = {
   workOrders,
   servs,
   workshops,
+  transactions,
 };
 export default LocalDB;

@@ -160,7 +160,6 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
 
   const updateWorkshop = useCallback(
     async (ws: IWorkshop) => {
-      console.log(ws);
       loadAlert();
       try {
         const updating = await settingsService.update(ws.id, ws);

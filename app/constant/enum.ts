@@ -31,6 +31,17 @@ export enum ServStatus {
   QUEUE = 'queue',
   PROGRESS = 'progress',
   DONE = 'done',
+  BILL = 'bill',
+}
+
+export enum TransactionStatus {
+  PAID = 'paid',
+  UNPAID = 'unpaid',
+}
+
+export enum TransactionType {
+  PART = 'PART',
+  SERVICE = 'SERVICE',
 }
 
 export enum ImagePart {

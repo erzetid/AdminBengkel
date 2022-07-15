@@ -31,12 +31,18 @@ const TabSheet = forwardRef<BottomSheetModal, TabSheetProps>(
         <Text style={styles.textPlate}>{data?.vehicle.plate}</Text>
         <BottomSheetScrollView>
           <View style={styles.detailContent}>
-            <Text style={styles.textTitle}>Tanggal</Text>
+            <Text style={styles.textTitle}>Tanggal Daftar</Text>
             <Text style={styles.textValue}>
               :{' '}
               {formatDate(data?.time || 0, 'dd LLLL yyyy HH:mm', {
                 locale: id,
               })}
+            </Text>
+          </View>
+          <View style={styles.detailContent}>
+            <Text style={styles.textTitle}>No Pendaftaran</Text>
+            <Text style={styles.textValue}>
+              : {`${data?.queue}${data?.time}`}
             </Text>
           </View>
           <View style={styles.detailContent}>
