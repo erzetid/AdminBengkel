@@ -113,25 +113,12 @@ const TransactionDetail: FC<TransactionDetailProps> = ({
   return (
     <Form visible={visible} iosIcon="wallet" title="Preview" onClose={onClose}>
       <View>
-        <View
-          style={{
-            marginBottom: 15,
-            paddingBottom: 5,
-            borderBottomColor: color.darkGray,
-            borderBottomWidth: 1,
-            borderStyle: 'dashed',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{color: color.black, fontSize: 18}}>
-            {workshop.name}
-          </Text>
+        <View style={styles.header}>
+          <Text style={styles.textName}>{workshop.name}</Text>
           <Text>Kode Bengkel: {workshop.code}</Text>
-          <Text style={{color: color.darkGray, fontStyle: 'italic'}}>
-            {workshop.address}
-          </Text>
-          <Text>{workshop.phone}</Text>
-          <Text>{workshop.description}</Text>
+          <Text style={styles.textAddress}>{workshop.address}</Text>
+          <Text style={styles.textNormal}>{workshop.phone}</Text>
+          <Text style={styles.textNormal}>{workshop.description}</Text>
         </View>
         <View style={styles.detailContent}>
           <Text style={styles.textTitle}>Tanggal</Text>
@@ -212,6 +199,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  header: {
+    marginBottom: 15,
+    paddingBottom: 5,
+    borderBottomColor: color.darkGray,
+    borderBottomWidth: 1,
+    borderStyle: 'dashed',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textName: {color: color.black, fontSize: 18},
+  textAddress: {color: color.darkGray, fontStyle: 'italic'},
+  textNormal: {color: color.darkGray},
   detailContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
