@@ -6,6 +6,7 @@
 import {ICustomer} from '../model/Customer';
 import {INote} from '../model/Note';
 import {IServ, IWorkOrder} from '../model/Serv';
+import {ITransaction} from '../model/Transaction';
 import {IVehicle} from '../model/Vehicle';
 import {IWorkshop} from '../model/Workshop';
 import {PartDetail} from '../screens/interface';
@@ -18,7 +19,7 @@ const notes = new Database<INote>('notes');
 const workOrders = new Database<IWorkOrder>('workorders');
 const servs = new Database<IServ>('servs');
 const workshops = new Database<IWorkshop>('workshops');
-const transactions = new Database<IWorkshop>('transactions');
+const transactions = new Database<ITransaction>('transactions');
 
 const LocalDB = {
   parts,
