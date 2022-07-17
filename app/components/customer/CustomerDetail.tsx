@@ -199,7 +199,7 @@ const CustomerDetail = forwardRef<BottomSheetModal, CustomerDetailProps>(
                   </View>
                   <View style={styles.dataContent}>
                     <Text style={styles.textField}>Telp/Hp :</Text>
-                    <Text style={styles.textValue}>{data.phone}</Text>
+                    <Text style={styles.textValue}>+62{data.phone}</Text>
                   </View>
                 </View>
                 <View style={styles.imageContent}>
