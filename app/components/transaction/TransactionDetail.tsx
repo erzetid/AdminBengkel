@@ -5,13 +5,15 @@
 
 import {format as formatDate} from 'date-fns';
 import id from 'date-fns/locale/id';
-import React, {FC, useMemo} from 'react';
+import React, {FC, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {formatNumber} from 'react-native-currency-input';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {TransactionType} from '../../constant/enum';
 import {color} from '../../constant/theme';
+import LocalDB from '../../database';
 import {ITransaction} from '../../model/Transaction';
+import {emptyWorkshop} from '../../model/Workshop';
 import Form from '../form/Form';
 
 interface TransactionDetailProps {
@@ -25,6 +27,17 @@ const TransactionDetail: FC<TransactionDetailProps> = ({
   data,
   onClose,
 }) => {
+  const workshopsCollection = useMemo(() => LocalDB.workshops, []);
+  const [workshop, setWorkshop] = useState(emptyWorkshop);
+
+  useEffect(() => {
+    const init = async () => {
+      const ws = await workshopsCollection.getAll();
+      ws.length && setWorkshop(ws[0]);
+    };
+    init();
+  }, [workshopsCollection]);
+
   const servMemo = useMemo(
     () => (
       <View style={styles.productContent}>
@@ -100,6 +113,26 @@ const TransactionDetail: FC<TransactionDetailProps> = ({
   return (
     <Form visible={visible} iosIcon="wallet" title="Preview" onClose={onClose}>
       <View>
+        <View
+          style={{
+            marginBottom: 15,
+            paddingBottom: 5,
+            borderBottomColor: color.darkGray,
+            borderBottomWidth: 1,
+            borderStyle: 'dashed',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={{color: color.black, fontSize: 18}}>
+            {workshop.name}
+          </Text>
+          <Text>Kode Bengkel: {workshop.code}</Text>
+          <Text style={{color: color.darkGray, fontStyle: 'italic'}}>
+            {workshop.address}
+          </Text>
+          <Text>{workshop.phone}</Text>
+          <Text>{workshop.description}</Text>
+        </View>
         <View style={styles.detailContent}>
           <Text style={styles.textTitle}>Tanggal</Text>
           <Text style={styles.textValue}>
