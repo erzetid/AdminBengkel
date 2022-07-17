@@ -15,6 +15,7 @@ import {
   Linking,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -93,7 +94,20 @@ const CustomerDetail = forwardRef<BottomSheetModal, CustomerDetailProps>(
     );
     const handleOnPressWA = useCallback(
       () =>
-        Linking.openURL(`whatsapp://send?text=${textWA}&phone=62${data.phone}`),
+        Linking.canOpenURL(
+          `whatsapp://send?text=${textWA}&phone=62${data.phone}`,
+        ).then(s => {
+          if (s) {
+            Linking.openURL(
+              `whatsapp://send?text=${textWA}&phone=62${data.phone}`,
+            );
+          } else {
+            ToastAndroid.show(
+              'Kamu harus menginstal whatsapp terlebih dahulu',
+              3000,
+            );
+          }
+        }),
       [data.phone, textWA],
     );
     const handleOnPressVehicle = () => {
