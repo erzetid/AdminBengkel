@@ -33,7 +33,7 @@ import {PartDetail} from '../../screens/interface';
 import Form from '../form/Form';
 import {IProduct} from '../serv/Products';
 
-const toRupiah = (num: number) => {
+export const toRupiah = (num: number) => {
   return formatNumber(num, {
     prefix: 'Rp',
     delimiter: ',',

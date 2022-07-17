@@ -18,6 +18,7 @@ target 'AdminBengkel' do
 
   pod 'react-native-pager-view', :path => '../node_modules/react-native-pager-view'
 
+
   target 'AdminBengkelTests' do
     inherit! :complete
     # Pods for testing

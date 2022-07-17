@@ -116,19 +116,6 @@ const PartForm: FC<PartFormProps> = ({
     onCancel();
   }, [onCancel]);
 
-  const buttonAction = useMemo(
-    () => (
-      <View style={styles.actionContent}>
-        <TouchableOpacity style={styles.btnCancel} onPress={handleOnCancel}>
-          <Text style={{color: color.white}}>Batal</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.btnSave} onPress={handleOnSave}>
-          <Text style={{color: color.white}}>Simpan</Text>
-        </TouchableOpacity>
-      </View>
-    ),
-    [handleOnSave, handleOnCancel],
-  );
   useEffect(() => {
     validation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -202,6 +189,20 @@ const PartForm: FC<PartFormProps> = ({
       callback();
     },
     [validation],
+  );
+
+  const buttonAction = useMemo(
+    () => (
+      <View style={styles.actionContent}>
+        <TouchableOpacity style={styles.btnCancel} onPress={handleOnCancel}>
+          <Text style={{color: color.white}}>Batal</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.btnSave} onPress={handleOnSave}>
+          <Text style={{color: color.white}}>Simpan</Text>
+        </TouchableOpacity>
+      </View>
+    ),
+    [handleOnSave, handleOnCancel],
   );
 
   return (

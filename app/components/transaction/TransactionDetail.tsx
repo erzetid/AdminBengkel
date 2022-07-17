@@ -115,9 +115,9 @@ const TransactionDetail: FC<TransactionDetailProps> = ({
       <View>
         <View style={styles.header}>
           <Text style={styles.textName}>{workshop.name}</Text>
-          <Text>Kode Bengkel: {workshop.code}</Text>
+          {/* <Text style={styles.textNormal}>Kode Bengkel: {workshop.code}</Text> */}
           <Text style={styles.textAddress}>{workshop.address}</Text>
-          <Text style={styles.textNormal}>{workshop.phone}</Text>
+          <Text style={styles.textNormal}>+62{workshop.phone}</Text>
           <Text style={styles.textNormal}>{workshop.description}</Text>
         </View>
         <View style={styles.detailContent}>
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: 15,
-    paddingBottom: 5,
+    paddingBottom: 10,
     borderBottomColor: color.darkGray,
     borderBottomWidth: 1,
     borderStyle: 'dashed',

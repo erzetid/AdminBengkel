@@ -3,6 +3,7 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
+import {ICashes} from '../model/CashFlow';
 import {ICustomer} from '../model/Customer';
 import {INote} from '../model/Note';
 import {IServ, IWorkOrder} from '../model/Serv';
@@ -20,6 +21,7 @@ const workOrders = new Database<IWorkOrder>('workorders');
 const servs = new Database<IServ>('servs');
 const workshops = new Database<IWorkshop>('workshops');
 const transactions = new Database<ITransaction>('transactions');
+const cashes = new Database<ICashes>('cashes');
 
 const LocalDB = {
   parts,
@@ -30,5 +32,6 @@ const LocalDB = {
   servs,
   workshops,
   transactions,
+  cashes,
 };
 export default LocalDB;

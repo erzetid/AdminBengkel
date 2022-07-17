@@ -11,6 +11,7 @@ import {
   BackHandler,
   Dimensions,
   ImageBackground,
+  Pressable,
   SafeAreaView,
   StyleSheet,
   View,
@@ -21,10 +22,11 @@ import {BACKGROUND} from '../assets/images';
 import AlertCustom, {emptyAlert} from '../components/AlertCustom';
 import {Ads, Balance, Header, Menu} from '../components/home';
 import Setting from '../components/home/setting';
-import {ResultStatus} from '../constant/enum';
+import {CashFlowType, ResultStatus} from '../constant/enum';
 import {color} from '../constant/theme';
 import LocalDB from '../database';
 import {generateCode} from '../helpers';
+import {ICashFlow} from '../model/CashFlow';
 import {emptyWorkshop, IWorkshop} from '../model/Workshop';
 import {AwesomeAlertProps, HomeScreenProps} from './interface';
 
@@ -39,14 +41,20 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
   const [optionAlert, setOptionAlert] = useState<AwesomeAlertProps>(emptyAlert);
   const [setRefPosition, setSetRefPosition] = useState<boolean>(false);
   const [workshop, setWorkshop] = useState(emptyWorkshop);
+  const [_visiblePrint, setVisiblePrint] = useState(false);
+  const cashesCollection = useMemo(() => LocalDB.cashes, []);
+  const txCollection = useMemo(() => LocalDB.transactions, []);
+
+  const [valueBalance, setValueBalance] = useState({income: 0, outcome: 0});
 
   useEffect(() => {
     const get = async () => {
+      await getCash();
       await init();
     };
     get();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [txCollection, cashesCollection]);
   useEffect(() => {
     optionAlertRef.current = optionAlert;
   }, [optionAlert]);
@@ -73,6 +81,38 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
     return () => backHandler.remove();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setRefPosition]);
+
+  const getCash = async () => {
+    const _cashes = await cashesCollection.getAll();
+    const _tx = await txCollection.getAll();
+    const adapterCashes: ICashFlow[] = _cashes.map(x => {
+      return {...x, detail: x};
+    });
+    const adapterTx: ICashFlow[] = _tx.map(x => {
+      return {
+        amount: x.finalAmount,
+        detail: x,
+        no: x.no,
+        description: '',
+        category: x.type,
+        time: x.time,
+        type: CashFlowType.INCOME,
+      };
+    });
+    const concatCash = adapterCashes.concat(adapterTx);
+    let income = 0;
+    let outcome = 0;
+    concatCash.forEach(x => {
+      if (x.type === CashFlowType.INCOME) {
+        income += x.amount;
+      }
+      if (x.type === CashFlowType.OUTCOME) {
+        outcome += x.amount;
+      }
+    });
+
+    setValueBalance({income, outcome});
+  };
 
   const init = useCallback(async () => {
     const ws = await settingsService.getAll();
@@ -185,6 +225,10 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
     [confirmAlert, hideAlert, updateWorkshop],
   );
 
+  const handleOnPrint = useCallback(() => {
+    setVisiblePrint(true);
+  }, []);
+
   const adsMemo = useMemo(
     () => (
       <Ads>
@@ -199,6 +243,13 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
     ),
     [],
   );
+
+  // const printerMemo = useMemo(
+  //   () => (
+  //     <Printer visible={visiblePrint} onClose={() => setVisiblePrint(false)} />
+  //   ),
+  //   [visiblePrint],
+  // );
   return (
     <SafeAreaView style={styles.screen}>
       <ImageBackground source={BACKGROUND.secondary} style={styles.background}>
@@ -210,7 +261,12 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
               workshop={workshop}
             />
             {menu}
-            <Balance />
+            <Pressable onPress={getCash}>
+              <Balance
+                income={valueBalance.income}
+                outcome={valueBalance.outcome}
+              />
+            </Pressable>
           </View>
           {adsMemo}
         </ScrollView>
@@ -220,7 +276,9 @@ const HomeScreen: FC<HomeScreenProps> = ({navigation}) => {
         ref={settingRef}
         onPress={handleOnPressUpdateSetting}
         workshop={workshop}
+        onPrinter={handleOnPrint}
       />
+      {/* {printerMemo} */}
     </SafeAreaView>
   );
 };

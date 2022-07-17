@@ -16,10 +16,11 @@ import BackdropBS from '../../BackdropBS';
 interface SettingProps {
   workshop: IWorkshop;
   onPress: (ws: IWorkshop) => void;
+  onPrinter: () => void;
 }
 
 const Setting = forwardRef<BottomSheetModal, SettingProps>(
-  ({workshop, onPress}, ref) => {
+  ({workshop, onPress, onPrinter}, ref) => {
     const snapPoints = useMemo(() => ['100%'], []);
     const ws = useRef<IWorkshop>(workshop);
     const [phoneFocus, setPhoneFocus] = useState(false);
@@ -61,6 +62,12 @@ const Setting = forwardRef<BottomSheetModal, SettingProps>(
               </View>
               <Image source={SPLASH.logo} style={styles.imageLogo} />
             </View>
+          </View>
+          <View>
+            <Text style={styles.textInfo}>Printer</Text>
+            <TouchableOpacity style={styles.btnPrint} onPress={onPrinter}>
+              <Text style={styles.btnText}>HUBUNGKAN PRINTER</Text>
+            </TouchableOpacity>
           </View>
           <View>
             <Text style={styles.textInfo}>Data Bengkel</Text>
@@ -172,6 +179,14 @@ const styles = StyleSheet.create({
   },
   btnUpdate: {
     backgroundColor: color.lightPurple,
+    borderRadius: 5,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  btnPrint: {
+    backgroundColor: color.green,
     borderRadius: 5,
     padding: 10,
     justifyContent: 'center',

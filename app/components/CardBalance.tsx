@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    marginEnd: 5,
   },
   textTitle: {color: '#EDE4E4'},
   textValue: {

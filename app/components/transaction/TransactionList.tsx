@@ -78,7 +78,7 @@ const TransactionList: FC<TransactionListProps> = ({data, onPressItem}) => {
   return (
     <View style={styles.flatList}>
       {!data.length ? (
-        <Text>Data tidak ditemukan.</Text>
+        <Text style={styles.text}>Data tidak ditemukan.</Text>
       ) : (
         <FlatList
           data={data}

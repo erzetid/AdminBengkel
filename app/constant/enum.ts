@@ -57,3 +57,11 @@ export enum ImagePart {
   TIRE = 'tire',
   V_BELT = 'vBelt',
 }
+
+export enum CashFlowType {
+  INCOME = 'income',
+  OUTCOME = 'outcome',
+}
+export enum CashCategory {
+  DIRECT = 'direct',
+}

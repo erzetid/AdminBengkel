@@ -3,13 +3,19 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import React from 'react';
+import React, {FC} from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {formatNumber} from 'react-native-currency-input';
 import {text} from '../../../constant/styles';
 import {color} from '../../../constant/theme';
 import CardBalance from '../../CardBalance';
 
-const Balance = () => {
+interface BalanceProps {
+  income: number;
+  outcome: number;
+}
+
+const Balance: FC<BalanceProps> = ({income, outcome}) => {
   return (
     <SafeAreaView style={styles.content}>
       <Text style={text.primaryMedium}>Kas saat ini</Text>
@@ -18,14 +24,22 @@ const Balance = () => {
           title={'Pemasukan'}
           color={'#91ECC9'}
           backgroundColor={color.darkBlue}
-          value={'Rp200,000'}
+          value={formatNumber(income, {
+            prefix: 'Rp',
+            delimiter: ',',
+            signPosition: 'beforePrefix',
+          })}
         />
-
+        <View style={styles.margin} />
         <CardBalance
           title={'Pengeluaran'}
           color={'#E04949'}
           backgroundColor={color.lightPurple}
-          value={'Rp200,000'}
+          value={formatNumber(outcome, {
+            prefix: 'Rp',
+            delimiter: ',',
+            signPosition: 'beforePrefix',
+          })}
         />
       </View>
     </SafeAreaView>
@@ -35,6 +49,11 @@ const Balance = () => {
 export default Balance;
 
 const styles = StyleSheet.create({
-  content: {marginTop: 0},
+  content: {
+    marginTop: 0,
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  margin: {width: 10},
   card: {flexDirection: 'row', marginTop: 10},
 });
