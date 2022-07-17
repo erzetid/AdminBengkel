@@ -110,6 +110,11 @@ const DonationScreen: FC<DonationScreenProps> = ({navigation}) => {
           }}>
           <Text style={styles.text}>SAWERIA</Text>
         </TouchableOpacity>
+        <Text style={styles.textIntro}>{'\n'}Info kolaborasi/kontribusi:</Text>
+        <Text style={styles.textIntro}>
+          Alamat: Sawojajar, Wanasari, Brebes
+        </Text>
+        <Text style={styles.textIntro}>Whatsapp: 08156257921</Text>
       </View>
     </SecondBackground>
   );
