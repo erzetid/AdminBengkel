@@ -77,12 +77,16 @@ const TransactionList: FC<TransactionListProps> = ({data, onPressItem}) => {
 
   return (
     <View style={styles.flatList}>
-      <FlatList
-        data={data}
-        initialNumToRender={10}
-        windowSize={5}
-        renderItem={render}
-      />
+      {!data.length ? (
+        <Text>Data tidak ditemukan.</Text>
+      ) : (
+        <FlatList
+          data={data}
+          initialNumToRender={10}
+          windowSize={5}
+          renderItem={render}
+        />
+      )}
     </View>
   );
 };

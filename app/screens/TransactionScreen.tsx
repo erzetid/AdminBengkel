@@ -26,9 +26,11 @@ import {ITransaction} from '../model/Transaction';
 import {AwesomeAlertProps, TransactionScreenProps} from './interface';
 
 const TransactionScreen: FC<TransactionScreenProps> = ({navigation}) => {
-  const transactionCollection = useMemo(() => LocalDB.transactions, []);
+  const transactionsCollection = useMemo(() => LocalDB.transactions, []);
+  const partsCollection = useMemo(() => LocalDB.parts, []);
   const optionAlertRef = useRef<AwesomeAlertProps>(emptyAlert);
   const txRef = useRef<ITransaction[]>([]);
+  // const partRef = useRef<PartDetail[]>([]);
   const [optionAlert, setOptionAlert] = useState<AwesomeAlertProps>(emptyAlert);
   const [visible, setVisible] = useState(false);
   const [transaction, setTransaction] = useState<ITransaction>();
@@ -61,10 +63,12 @@ const TransactionScreen: FC<TransactionScreenProps> = ({navigation}) => {
   }, [optionAlert]);
 
   const getTransaction = useCallback(async () => {
-    const _transactions = await transactionCollection.getAll();
+    const _transactions = await transactionsCollection.getAll();
+    // const _parts = await partsCollection.getAll();
     txRef.current = _transactions;
+    // partRef.current = _parts;
     setTransactions(_transactions.sort((a, b) => b.time - a.time));
-  }, [transactionCollection]);
+  }, [transactionsCollection]);
 
   const hideAlert = useCallback(() => {
     setOptionAlert({...optionAlertRef.current, show: false, progress: false});
@@ -148,13 +152,31 @@ const TransactionScreen: FC<TransactionScreenProps> = ({navigation}) => {
     },
     [statusAlert],
   );
+
+  const updateStock = useCallback(
+    async (id: string, qty: number) => {
+      try {
+        const part = await partsCollection.findById(id);
+        if (part.data) {
+          const quantity = part.data.quantity - qty;
+          await partsCollection.update(id, {...part.data!, quantity});
+        }
+      } catch (error) {}
+    },
+    [partsCollection],
+  );
+
   const onAddTransaction = useCallback(
     async (tx: ITransaction) => {
       loadAlert();
       try {
-        const saving = await transactionCollection.create(tx);
+        const saving = await transactionsCollection.create(tx);
         if (saving.status === ResultStatus.SUCCESS) {
+          tx.products.p.forEach(
+            async x => await updateStock(x.id!, x.quantity),
+          );
           await getTransaction();
+
           setVisibleAddTx(false);
           setIsNewFormAddTx(false);
         }
@@ -163,7 +185,13 @@ const TransactionScreen: FC<TransactionScreenProps> = ({navigation}) => {
         statusAlert('Ada Kesalahan', ResultStatus.ERROR);
       }
     },
-    [getTransaction, loadAlert, statusAlert, transactionCollection],
+    [
+      getTransaction,
+      loadAlert,
+      statusAlert,
+      transactionsCollection,
+      updateStock,
+    ],
   );
   const handleAddTransaction = useCallback(
     (tx: ITransaction) => {
