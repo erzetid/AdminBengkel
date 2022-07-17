@@ -321,6 +321,10 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
   const handleSearch = useCallback(async () => {
     searchingParts(searchBarText.current);
   }, [searchingParts]);
+
+  // const handleSellPart = useCallback(() => {}, []);
+  // const addTransaction = useMemo(() => {}, []);
+
   return (
     <SecondBackground>
       <SecondHeader
@@ -355,6 +359,7 @@ const PartScreen: FC<ServiceScreenProps> = ({navigation}) => {
         navigation={navigation}
         onSave={handleUpdatePart}
         onDelete={handleDeletePart}
+        // onSell={handleSellPart}
         openForm={editFormShow}
         setEditFormShow={setEditFormShow}
       />

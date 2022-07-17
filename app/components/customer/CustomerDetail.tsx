@@ -208,7 +208,7 @@ const CustomerDetail = forwardRef<BottomSheetModal, CustomerDetailProps>(
                   />
                   <Text style={styles.textAction}>Edit</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={{
                     ...styles.btnAction,
                     backgroundColor: color.lightBlue,
@@ -219,7 +219,7 @@ const CustomerDetail = forwardRef<BottomSheetModal, CustomerDetailProps>(
                     color={color.white}
                   />
                   <Text style={styles.textAction}>Riwayat</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity
                   style={{...styles.btnAction, backgroundColor: color.red}}
                   onPress={handleOnPressVehicle}>
@@ -239,14 +239,14 @@ const CustomerDetail = forwardRef<BottomSheetModal, CustomerDetailProps>(
                   />
                   <Text style={styles.textAction}>WA: Ingatkan Servis</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={{
                     ...styles.btnAction,
                     backgroundColor: color.lightPurple,
                   }}>
                   <Icon name="ios-cart-outline" size={16} color={color.white} />
                   <Text style={styles.textAction}>Tambah Transaksi</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </>
           ) : (

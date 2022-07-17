@@ -41,6 +41,7 @@ export interface BottomSheetDetailProps extends ScreenProps {
   openForm: boolean;
   onSave: (part: PartDetail) => void;
   onDelete: (part: PartDetail) => void;
+  // onSell: (part: PartDetail) => void;
   setEditFormShow: (show: boolean) => void;
 }
 

@@ -112,11 +112,11 @@ const BottomSheetDetail = forwardRef<BottomSheetModal, BottomSheetDetailProps>(
             <Icon name="ios-create-outline" color={color.white} size={16} />
             <Text style={styles.btnActionText}>Edit</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{...styles.btnAction, backgroundColor: color.lightBlue}}>
             <Icon name="ios-cart-outline" color={color.white} size={16} />
             <Text style={styles.btnActionText}>Jual</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={{...styles.btnAction, backgroundColor: color.red}}
             onPress={onPressDelete}>
