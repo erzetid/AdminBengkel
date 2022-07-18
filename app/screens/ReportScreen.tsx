@@ -5,15 +5,25 @@
 
 import {format as formatDate} from 'date-fns';
 import id from 'date-fns/locale/id';
-import React, {FC, useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   BackHandler,
   StyleSheet,
   Text,
   ToastAndroid,
   TouchableOpacity,
+  View,
 } from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 import * as ScopedStorage from 'react-native-scoped-storage';
+import Icon from 'react-native-vector-icons/Ionicons';
 import XLSX from 'xlsx';
 import SecondBackground from '../components/SecondBackground';
 import SecondHeader from '../components/SecondHeader';
@@ -34,6 +44,22 @@ const ReportScreen: FC<ReportScreenProps> = ({navigation}) => {
   const partRef = useRef<PartDetail[]>([]);
   const servRef = useRef<IServ[]>([]);
   const cashRef = useRef<ICashFlow[]>([]);
+  const [openCategory, setOpenCategory] = useState(false);
+  const [valueCategory, setValueCategory] = useState<number | null>(null);
+  const [itemsCategory, setItemsCategory] = useState<
+    {
+      label: string;
+      value: number;
+    }[]
+  >([
+    {label: 'Data Stok Sparepart', value: 1},
+    {label: 'Data Jasa Servis', value: 2},
+    {label: 'Penjualan Sparepart', value: 3},
+    {label: 'Penjualan Jasa Servis', value: 4},
+    {label: 'Data Transaksi', value: 5},
+    {label: 'Data Arus Kas', value: 6},
+  ]);
+
   useEffect(() => {
     const init = async () => {
       await initialData();
@@ -272,6 +298,7 @@ const ReportScreen: FC<ReportScreenProps> = ({navigation}) => {
             ['Hp Konsumen']: '62' + tx.customer.phone,
             ['No Plat']: plate,
             ['Status']: tx.status,
+            ['Jenis']: tx.type,
             ['Pajak']: tx.tax,
             ['Pajak Rp']: tx.amountTax,
             ['Diskon %']: tx.discount,
@@ -292,6 +319,45 @@ const ReportScreen: FC<ReportScreenProps> = ({navigation}) => {
     [exportDataToExcel],
   );
 
+  const handleOnExport = useCallback(() => {
+    switch (valueCategory) {
+      case 1:
+        exportPart();
+        break;
+
+      case 2:
+        exportServ();
+        break;
+
+      case 3:
+        exportSell('part');
+        break;
+
+      case 4:
+        exportSell('serv');
+        break;
+
+      case 5:
+        exportTx();
+        break;
+
+      case 6:
+        exportCashFlow();
+        break;
+
+      default:
+        ToastAndroid.show('Pilih kategori terlebih dahulu', 3000);
+        break;
+    }
+  }, [
+    exportCashFlow,
+    exportPart,
+    exportSell,
+    exportServ,
+    exportTx,
+    valueCategory,
+  ]);
+
   return (
     <SecondBackground>
       <SecondHeader
@@ -299,9 +365,28 @@ const ReportScreen: FC<ReportScreenProps> = ({navigation}) => {
         navigation={navigation}
         titleColor={color.white}
       />
-      <TouchableOpacity onPress={() => exportServ()}>
-        <Text>Klik</Text>
-      </TouchableOpacity>
+      <View
+        style={{backgroundColor: color.white, borderRadius: 5, padding: 10}}>
+        <DropDownPicker
+          open={openCategory}
+          value={valueCategory}
+          items={itemsCategory}
+          setOpen={setOpenCategory}
+          setValue={setValueCategory}
+          setItems={setItemsCategory}
+          placeholder={'Pilih kategori'}
+          style={styles.dropdownCategory}
+          labelStyle={styles.labelCategory}
+          placeholderStyle={styles.placeholderCategory}
+          listMode="MODAL"
+        />
+        <Text style={styles.dropdownCategoryText}>Kategori</Text>
+        <TouchableOpacity style={styles.btnExport} onPress={handleOnExport}>
+          <Text style={styles.textBtnExport}>
+            <Icon name="grid" color={color.white} size={16} /> Export Data
+          </Text>
+        </TouchableOpacity>
+      </View>
     </SecondBackground>
   );
 };
@@ -312,4 +397,31 @@ const styles = StyleSheet.create({
   text: {
     color: color.black,
   },
+  dropdownCategory: {
+    borderRadius: 5,
+    borderColor: color.gray,
+    marginBottom: 5,
+    borderWidth: 1.2,
+    minHeight: 60,
+  },
+  dropdownCategoryText: {
+    fontSize: 12,
+    color: color.gray,
+    marginStart: 16,
+    backgroundColor: color.white,
+    position: 'absolute',
+    top: 4,
+    paddingHorizontal: 5,
+    elevation: 0.1,
+  },
+  labelCategory: {color: color.darkGray, fontSize: 16},
+  placeholderCategory: {fontSize: 16, color: color.gray},
+  btnExport: {
+    backgroundColor: color.green,
+    marginVertical: 5,
+    padding: 5,
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  textBtnExport: {color: color.white, fontSize: 16},
 });
