@@ -6,7 +6,13 @@
 import {format as formatDate} from 'date-fns';
 import id from 'date-fns/locale/id';
 import React, {FC, useEffect, useMemo, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {formatNumber} from 'react-native-currency-input';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {TransactionType} from '../../constant/enum';
@@ -182,7 +188,14 @@ const TransactionDetail: FC<TransactionDetailProps> = ({
             })}
           </Text>
         </View>
-        <TouchableOpacity style={styles.btnPrint}>
+        <TouchableOpacity
+          style={styles.btnPrint}
+          onPress={() => {
+            ToastAndroid.show(
+              'Mohon maaf fitur print sedang maintanance',
+              4000,
+            );
+          }}>
           <Text style={styles.textBtnPrint}>
             Print <Icon name="print" color={color.white} size={18} />
           </Text>
